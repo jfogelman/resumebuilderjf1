@@ -28,7 +28,7 @@
             <br />
             <asp:Label ID="lblStatus" runat="server" Text="Label" Visible="False"></asp:Label>
             <br />
-            d</strong>
+            </strong>
         </ContentTemplate>
     </asp:UpdatePanel>
     <p>
