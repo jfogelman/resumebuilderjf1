@@ -14,7 +14,8 @@
     <p>
         Step 2:</p>
     <p>
-        Add Resume Information</p>
+    <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/AddResumeInfo.aspx">Add Resume Information</asp:HyperLink>
+        </p>
     <p>
         Step 3:</p>
     <p>
