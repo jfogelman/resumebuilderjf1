@@ -11,7 +11,13 @@ namespace DocWebtest1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["UserID"] != null)
+            {
+                int iUserID = Convert.ToInt32(Session["UserID"]);
+                this.SqlDataSource1.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
+                this.SqlDataSourcePhone.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
+                this.SqlDataSourceAddr.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
+            }
         }
 
         protected void Wizard1_FinishButtonClick(object sender, WizardNavigationEventArgs e)
