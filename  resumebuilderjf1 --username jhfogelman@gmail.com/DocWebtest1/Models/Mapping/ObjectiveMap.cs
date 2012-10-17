@@ -3,31 +3,26 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace DocWebtest1.Models.Mapping
 {
-    public class PhoneMap : EntityTypeConfiguration<Phone>
+    public class ObjectiveMap : EntityTypeConfiguration<Objective>
     {
-        public PhoneMap()
+        public ObjectiveMap()
         {
             // Primary Key
             this.HasKey(t => t.ID);
 
             // Properties
-            this.Property(t => t.PhnDesc)
+            this.Property(t => t.ObjectiveText)
                 .HasMaxLength(50);
 
-            this.Property(t => t.PhoneNumber)
-                .IsFixedLength()
-                .HasMaxLength(20);
-
             // Table & Column Mappings
-            this.ToTable("Phones");
+            this.ToTable("Objectives");
             this.Property(t => t.ID).HasColumnName("ID");
-            this.Property(t => t.PhnDesc).HasColumnName("PhnDesc");
-            this.Property(t => t.PhoneNumber).HasColumnName("PhoneNumber");
+            this.Property(t => t.ObjectiveText).HasColumnName("ObjectiveText");
             this.Property(t => t.UserID).HasColumnName("UserID");
 
             // Relationships
             this.HasRequired(t => t.Usertable)
-                .WithMany(t => t.Phones)
+                .WithMany(t => t.Objectives)
                 .HasForeignKey(d => d.UserID);
 
         }

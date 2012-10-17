@@ -14,10 +14,13 @@ namespace DocWebtest1.Models.Mapping
             // Table & Column Mappings
             this.ToTable("Resumes");
             this.Property(t => t.ID).HasColumnName("ID");
-            this.Property(t => t.Objective).HasColumnName("Objective");
+            this.Property(t => t.ObjectiveID).HasColumnName("ObjectiveID");
             this.Property(t => t.UserID).HasColumnName("UserID");
 
             // Relationships
+            this.HasOptional(t => t.Objective)
+                .WithMany(t => t.Resumes)
+                .HasForeignKey(d => d.ObjectiveID);
             this.HasRequired(t => t.Usertable)
                 .WithMany(t => t.Resumes)
                 .HasForeignKey(d => d.UserID);
