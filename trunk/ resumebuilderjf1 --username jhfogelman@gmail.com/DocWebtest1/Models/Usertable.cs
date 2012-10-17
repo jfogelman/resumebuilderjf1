@@ -11,6 +11,8 @@ namespace DocWebtest1.Models
             this.Educations = new List<Education>();
             this.Emails = new List<Email>();
             this.Experiences = new List<Experience>();
+            this.Objectives = new List<Objective>();
+            this.Phones = new List<Phone>();
             this.Resumes = new List<Resume>();
         }
 
@@ -25,6 +27,8 @@ namespace DocWebtest1.Models
         public virtual ICollection<Education> Educations { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
         public virtual ICollection<Experience> Experiences { get; set; }
+        public virtual ICollection<Objective> Objectives { get; set; }
+        public virtual ICollection<Phone> Phones { get; set; }
         public virtual ICollection<Resume> Resumes { get; set; }
     }
 }

@@ -21,10 +21,12 @@ namespace DocWebtest1.Models
         public DbSet<Education> Educations { get; set; }
         public DbSet<Email> Emails { get; set; }
         public DbSet<Experience> Experiences { get; set; }
+        public DbSet<Objective> Objectives { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<ResumeEducation> ResumeEducations { get; set; }
         public DbSet<ResumeExperience> ResumeExperiences { get; set; }
         public DbSet<Resume> Resumes { get; set; }
+        public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<UserResume> UserResumes { get; set; }
         public DbSet<Usertable> Usertables { get; set; }
 
@@ -35,10 +37,12 @@ namespace DocWebtest1.Models
             modelBuilder.Configurations.Add(new EducationMap());
             modelBuilder.Configurations.Add(new EmailMap());
             modelBuilder.Configurations.Add(new ExperienceMap());
+            modelBuilder.Configurations.Add(new ObjectiveMap());
             modelBuilder.Configurations.Add(new PhoneMap());
             modelBuilder.Configurations.Add(new ResumeEducationMap());
             modelBuilder.Configurations.Add(new ResumeExperienceMap());
             modelBuilder.Configurations.Add(new ResumeMap());
+            modelBuilder.Configurations.Add(new sysdiagramMap());
             modelBuilder.Configurations.Add(new UserResumeMap());
             modelBuilder.Configurations.Add(new UsertableMap());
         }

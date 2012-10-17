@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="0" BackColor="#EFF3FB" 
+    <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="1" BackColor="#EFF3FB" 
         BorderColor="#B5C7DE" BorderWidth="1px" Font-Names="Verdana" Font-Size="1.0em" 
         Height="215px" Width="753px" 
         onfinishbuttonclick="Wizard1_FinishButtonClick">
@@ -93,6 +93,7 @@
                             <asp:Label ID="IDLabel1" runat="server" Text='<%# Eval("ID") %>' />
                         </td>
                         <td>
+                        
                             <asp:TextBox ID="EmailTextTextBox" runat="server" 
                                 Text='<%# Bind("EmailText") %>' />
                         </td>
@@ -129,6 +130,7 @@
                                 Text='<%# Bind("EmailText") %>' />
                         </td>
                         <td>
+                        
                             <asp:TextBox ID="EmailDescTextBox" runat="server" 
                                 Text='<%# Bind("EmailDesc") %>' />
                         </td>
@@ -263,7 +265,7 @@
                                 Text='<%# Bind("PhoneNumber") %>' />
                         </td>
                         <td>
-                            <asp:TextBox ID="UserIDTextBox" runat="server" Text='<%# Bind("UserID") %>' />
+                            <asp:Label ID="UserIDLabel" runat="server" Text='<%# Eval("UserID") %>' />
                         </td>
                     </tr>
                 </EditItemTemplate>
@@ -296,7 +298,7 @@
                                 Text='<%# Bind("PhoneNumber") %>' />
                         </td>
                         <td>
-                            <asp:TextBox ID="UserIDTextBox" runat="server" Text='<%# Bind("UserID") %>' />
+                            <asp:Label ID="UserIDLabel" runat="server" Text='<%# Eval("UserID") %>' />
                         </td>
                     </tr>
                 </InsertItemTemplate>
@@ -480,7 +482,7 @@
                             <asp:TextBox ID="ZipcodeTextBox" runat="server" Text='<%# Bind("Zipcode") %>' />
                         </td>
                         <td>
-                            <asp:TextBox ID="UserIDTextBox" runat="server" Text='<%# Bind("UserID") %>' />
+                            <asp:Label ID="UserIDLabel" runat="server" Text='<%# Eval("UserID") %>' />
                         </td>
                     </tr>
                 </EditItemTemplate>
@@ -526,7 +528,7 @@
                             <asp:TextBox ID="ZipcodeTextBox" runat="server" Text='<%# Bind("Zipcode") %>' />
                         </td>
                         <td>
-                            <asp:TextBox ID="UserIDTextBox" runat="server" Text='<%# Bind("UserID") %>' />
+                            <asp:Label ID="UserIDLabel" runat="server" Text='<%# Eval("UserID") %>' />
                         </td>
                     </tr>
                 </InsertItemTemplate>
@@ -694,6 +696,26 @@
     </asp:UpdatePanel>
         </asp:WizardStep>
         <asp:WizardStep ID="WizardStep2" runat="server" Title="Objective">
+            <h2>
+                Objective<br />
+            </h2>
+            <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+        <ContentTemplate>
+            <p>
+                <strong>&nbsp;<asp:TextBox ID="tbOjbective" runat="server" Height="80px" Rows="3" 
+                    TextMode="MultiLine" Width="512px"></asp:TextBox>
+                </strong>
+            </p>
+            &nbsp;
+            <asp:Button ID="bUpdateObjective" runat="server" CommandName="Update" 
+                Text="Update Objective    " Width="131px" onclick="bUpdateObjective_Click" 
+                oncommand="bUpdateObjective_Command" />
+            <br />
+            <asp:Label ID="lblObjectiveValidation" runat="server" Text="Label" Visible="False"></asp:Label>
+            <br />
+            </strong>
+        </ContentTemplate>
+    </asp:UpdatePanel>
         </asp:WizardStep>
 
         <asp:WizardStep runat="server" Title="Work Experience">
@@ -713,21 +735,6 @@ asda
 <p>
     &nbsp;</p>
 <p>
-    <asp:Wizard ID="Wizard2" runat="server" Width="508px">
-        <WizardSteps>
-            <asp:WizardStep runat="server" title="Contact Information">
-                sdfsdfsdfsdfsdfsdfsdfsdfsdf
-            </asp:WizardStep>
-            <asp:WizardStep runat="server" title="Objective">
-            </asp:WizardStep>
-            <asp:WizardStep runat="server" Title="Work Experience">
-            </asp:WizardStep>
-            <asp:WizardStep runat="server" Title="Education">
-            </asp:WizardStep>
-            <asp:WizardStep runat="server" Title="Skills">
-            </asp:WizardStep>
-        </WizardSteps>
-    </asp:Wizard>
-</p>
+    &nbsp;</p>
 </asp:Content>
 
