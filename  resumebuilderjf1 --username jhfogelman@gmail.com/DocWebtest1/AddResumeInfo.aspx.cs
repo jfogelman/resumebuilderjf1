@@ -18,5 +18,15 @@ namespace DocWebtest1
         {
 
         }
+
+        protected void bUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void bUpdate_Command(object sender, CommandEventArgs e)
+        {
+
+        }
     }
 }
