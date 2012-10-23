@@ -26,6 +26,7 @@ namespace DocWebtest1.Models
         public DbSet<ResumeEducation> ResumeEducations { get; set; }
         public DbSet<ResumeExperience> ResumeExperiences { get; set; }
         public DbSet<Resume> Resumes { get; set; }
+        public DbSet<Skill> Skills { get; set; }
         public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<UserResume> UserResumes { get; set; }
         public DbSet<Usertable> Usertables { get; set; }
@@ -42,6 +43,7 @@ namespace DocWebtest1.Models
             modelBuilder.Configurations.Add(new ResumeEducationMap());
             modelBuilder.Configurations.Add(new ResumeExperienceMap());
             modelBuilder.Configurations.Add(new ResumeMap());
+            modelBuilder.Configurations.Add(new SkillMap());
             modelBuilder.Configurations.Add(new sysdiagramMap());
             modelBuilder.Configurations.Add(new UserResumeMap());
             modelBuilder.Configurations.Add(new UsertableMap());

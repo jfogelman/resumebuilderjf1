@@ -14,6 +14,7 @@ namespace DocWebtest1.Models
             this.Objectives = new List<Objective>();
             this.Phones = new List<Phone>();
             this.Resumes = new List<Resume>();
+            this.Skills = new List<Skill>();
         }
 
         public int ID { get; set; }
@@ -30,5 +31,6 @@ namespace DocWebtest1.Models
         public virtual ICollection<Objective> Objectives { get; set; }
         public virtual ICollection<Phone> Phones { get; set; }
         public virtual ICollection<Resume> Resumes { get; set; }
+        public virtual ICollection<Skill> Skills { get; set; }
     }
 }
