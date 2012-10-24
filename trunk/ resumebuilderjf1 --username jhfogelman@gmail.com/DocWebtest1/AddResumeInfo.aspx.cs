@@ -22,6 +22,7 @@ namespace DocWebtest1
                 this.SqlDataSourcePhone.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
                 this.SqlDataSourceAddr.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
                 this.SqlDataSourceEducation.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
+                this.SqlDataSourceExperiences.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
             }
 
             if (Page.IsPostBack)
@@ -258,7 +259,7 @@ namespace DocWebtest1
                 int lvdindex = e.Item.DataItemIndex;
                 string phn = drv.Row["PhoneNumber"].ToString();
                 Label lblp = (Label)e.Item.FindControl("PhoneNumberLabel");
-                lblp.Text = phn == null ? "" : String.Format("{0:(###) ###-####}", Convert.ToInt64(phn));
+                lblp.Text = phn == null || phn.Length == 0 ? "" : String.Format("{0:(###) ###-####}", Convert.ToInt64(phn));
             }
         }
 
@@ -300,6 +301,17 @@ namespace DocWebtest1
             }
         }
 
+        protected void DropDownListCompanyStateEditing_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                DropDownList ddl = (DropDownList)sender;
+                int currIndex = ddl.SelectedIndex;
+                string currVal = ddl.SelectedValue;
+                SqlDataSourceExperiences.UpdateParameters["CompanyState"].DefaultValue = currVal;
+            }
+        }
+
         protected void ListView4_ItemUpdating(object sender, ListViewUpdateEventArgs e)
         {
             DropDownList ddl = ListView4.Items[e.ItemIndex].FindControl("DropDownListAddrStateEditing") as DropDownList;
@@ -316,24 +328,51 @@ namespace DocWebtest1
             {
                 SqlDataSourceEducation.UpdateParameters["SchoolState"].DefaultValue = ddl.SelectedValue;
             }
+
+            CheckBox chkEnrolled = ListView5.Items[e.ItemIndex].FindControl("IsCurrentCheckBox") as CheckBox;
+            if (chkEnrolled != null)
+            {
+                string cUsername = Membership.GetUser().UserName;
+                int cUserID = SessionHandler.GetUserID(cUsername);
+
+                var db = new usertest1Context();
+                var educ = (from c in db.Educations
+                            where c.UserID == cUserID
+                            select c);
+                foreach (Education ed in educ)
+                {
+                    ed.IsCurrent = false;
+                }
+                db.SaveChanges();
+            }
         }
 
         protected void ListView5_ItemDataBound(object sender, ListViewItemEventArgs e)
         {
-            if (e.Item != null && ListView5.EditIndex < 0)
+            if (e.Item != null)// && ListView5.EditIndex < 0)
             {
                 DataRowView drv = (DataRowView)e.Item.DataItem;
                 int lvdindex = e.Item.DataItemIndex;
                 string sdt = drv.Row["StartDate"].ToString();
-                DateTime ddt = Convert.ToDateTime(drv.Row["StartDate"]);
-                Label lblp = (Label)e.Item.FindControl("StartDateLabel");
-                lblp.Text = sdt == null ? "" : String.Format("{0:MM/yyyy}", ddt);
                 string edt = drv.Row["EndDate"].ToString();
+                DateTime ddt = Convert.ToDateTime(drv.Row["StartDate"]);
                 DateTime eddt = Convert.ToDateTime(drv.Row["EndDate"]);
-                Label elblp = (Label)e.Item.FindControl("EndDateLabel");
-                elblp.Text = edt == null ? "" : String.Format("{0:MM/yyyy}", eddt);
+                if (ListView5.EditIndex != e.Item.DisplayIndex)
+                {
+                    Label lblp = (Label)e.Item.FindControl("StartDateLabel");
+                    lblp.Text = sdt == null ? "" : String.Format("{0:MM/yyyy}", ddt);
+                    Label elblp = (Label)e.Item.FindControl("EndDateLabel");
+                    elblp.Text = edt == null ? "" : String.Format("{0:MM/yyyy}", eddt);
+                }
+                else
+                {
+                    TextBox lblp = (TextBox)e.Item.FindControl("StartDateTextBox");
+                    lblp.Text = sdt == null ? "" : String.Format("{0:MM/yyyy}", ddt);
+                    TextBox elblp = (TextBox)e.Item.FindControl("EndDateTextBox");
+                    elblp.Text = edt == null ? "" : String.Format("{0:MM/yyyy}", eddt);
+                }
             }
-            else if (ListView5.EditIndex >= 0)
+            if (ListView5.EditIndex >= 0)
             {
                 DataRowView drv = (DataRowView)e.Item.DataItem;
                 int lvdindex = e.Item.DataItemIndex;
@@ -346,6 +385,118 @@ namespace DocWebtest1
                         ddls.Items.FindByValue(st.Trim()).Selected = true;
                         //                        ddls.SelectedValue = st;
                         SqlDataSourceEducation.UpdateParameters["SchoolState"].DefaultValue = st.Trim();
+                    }
+                }
+            }
+        }
+
+        protected void ListView5_ItemInserting(object sender, ListViewInsertEventArgs e)
+        {
+            CheckBox chkEnrolled = e.Item.FindControl("IsCurrentCheckBox") as CheckBox;
+             if (chkEnrolled != null)
+            {
+                string cUsername = Membership.GetUser().UserName;
+                int cUserID = SessionHandler.GetUserID(cUsername);
+
+                //                c => c.UserID == cUserID
+                var db = new usertest1Context();
+                var educ = (from c in db.Educations
+                            where c.UserID == cUserID
+                            select c);
+                foreach (Education ed in educ)
+                {
+                    ed.IsCurrent = false;
+                }
+                db.SaveChanges();
+
+              
+
+            }
+        }
+
+        protected void ListView6_ItemUpdating(object sender, ListViewUpdateEventArgs e)
+        {
+            DropDownList ddl = ListView6.Items[e.ItemIndex].FindControl("DropDownListCompanyStateEditing") as DropDownList;
+            if (ddl != null)
+            {
+                SqlDataSourceExperiences.UpdateParameters["CompanyState"].DefaultValue = ddl.SelectedValue;
+            }
+
+            CheckBox chkEnrolled = ListView6.Items[e.ItemIndex].FindControl("IsCurrentCheckBox") as CheckBox;
+            if (chkEnrolled != null)
+            {
+                string cUsername = Membership.GetUser().UserName;
+                int cUserID = SessionHandler.GetUserID(cUsername);
+
+                var db = new usertest1Context();
+                var exps = (from c in db.Experiences
+                            where c.UserID == cUserID
+                            select c);
+                foreach (Experience ex in exps)
+                {
+                    ex.IsCurrent = false;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        protected void ListView6_ItemInserting(object sender, ListViewInsertEventArgs e)
+        {
+            CheckBox chkEnrolled = e.Item.FindControl("IsCurrentCheckBox") as CheckBox;
+            if (chkEnrolled != null)
+            {
+                string cUsername = Membership.GetUser().UserName;
+                int cUserID = SessionHandler.GetUserID(cUsername);
+
+                var db = new usertest1Context();
+                var exps = (from c in db.Experiences
+                            where c.UserID == cUserID
+                            select c);
+                foreach (Experience ex in exps)
+                {
+                    ex.IsCurrent = false;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        protected void ListView6_ItemDataBound(object sender, ListViewItemEventArgs e)
+        {
+            if (e.Item != null)// && ListView5.EditIndex < 0)
+            {
+                DataRowView drv = (DataRowView)e.Item.DataItem;
+                int lvdindex = e.Item.DataItemIndex;
+                string sdt = drv.Row["StartDate"].ToString();
+                string edt = drv.Row["EndDate"].ToString();
+                DateTime ddt = Convert.ToDateTime(drv.Row["StartDate"]);
+                DateTime eddt = Convert.ToDateTime(drv.Row["EndDate"]);
+                if (ListView6.EditIndex != e.Item.DisplayIndex)
+                {
+                    Label lblp = (Label)e.Item.FindControl("StartDateLabel");
+                    lblp.Text = sdt == null ? "" : String.Format("{0:MM/yyyy}", ddt);
+                    Label elblp = (Label)e.Item.FindControl("EndDateLabel");
+                    elblp.Text = edt == null ? "" : String.Format("{0:MM/yyyy}", eddt);
+                }
+                else
+                {
+                    TextBox lblp = (TextBox)e.Item.FindControl("StartDateTextBox");
+                    lblp.Text = sdt == null ? "" : String.Format("{0:MM/yyyy}", ddt);
+                    TextBox elblp = (TextBox)e.Item.FindControl("EndDateTextBox");
+                    elblp.Text = edt == null ? "" : String.Format("{0:MM/yyyy}", eddt);
+                }
+            }
+            if (ListView6.EditIndex >= 0)
+            {
+                DataRowView drv = (DataRowView)e.Item.DataItem;
+                int lvdindex = e.Item.DataItemIndex;
+                string st = drv.Row["CompanyState"].ToString();
+                if (e.Item.DisplayIndex == ListView6.EditIndex)
+                {
+                    DropDownList ddls = (DropDownList)e.Item.FindControl("DropDownListCompanyStateEditing");
+                    if (ddls != null)// && st.Trim().Length > 0)
+                    {
+                        ddls.Items.FindByValue(st.Trim()).Selected = true;
+                        SqlDataSourceExperiences.UpdateParameters["CompanyState"].DefaultValue = st.Trim();
                     }
                 }
             }
