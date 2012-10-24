@@ -11,7 +11,12 @@ namespace DocWebtest1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["UserID"] == null)
+            {
+                System.Web.Security.MembershipUser muser = System.Web.Security.Membership.GetUser();
+                if (muser != null)
+                    Session["UserID"] = SessionHandler.GetUserID(muser.UserName);
+            }
         }
     }
 }
