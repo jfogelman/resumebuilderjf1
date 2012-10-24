@@ -50,14 +50,17 @@ namespace DocWebtest1.acct
         {
 
             if (ValidateUser(LoginUser.UserName, LoginUser.Password))
+            {
+                Session["UserID"] = SessionHandler.GetUserID(LoginUser.UserName);
                 FormsAuthentication.RedirectFromLoginPage(LoginUser.UserName,
                     LoginUser.RememberMeSet);
+            }
             else
             {
                 LoginUser.FailureText = "Invalid username or password";
-                
+
                 //  LoginUser.FailureTextStyle.
-             //   Response.Redirect("Login.aspx", true);
+                //   Response.Redirect("Login.aspx", true);
             }
         }
     }
