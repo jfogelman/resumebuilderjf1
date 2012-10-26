@@ -65,6 +65,9 @@ namespace DocWebtest1
                 string cUsername = Membership.GetUser().UserName;
                 int cUserID = SessionHandler.GetUserID(cUsername);
 
+                /* Skills setup 
+                 * */
+                #region skillssetup
                 var skl = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
                 if (skl == null)
                 {
@@ -79,7 +82,9 @@ namespace DocWebtest1
                 //    decoded = decoded.Replace("&bslash", "\\");
                     decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab","\t");
                 ckeditor1.Text = Server.HtmlDecode(decoded == null ? "" : decoded);
+                #endregion
 
+                #region objectivessetup
                 var obj = db.Objectives.SingleOrDefault(c => c.UserID == cUserID);
                 if (obj == null)
                 {
@@ -92,76 +97,49 @@ namespace DocWebtest1
 
                 }
                 tbOjbective.Text = obj.ObjectiveText == null ? "" : obj.ObjectiveText;
-
-
-                //var educ = db.Educations.SingleOrDefault(c => c.UserID == cUserID);
-           /*     if (educ == null)
-                {
-                    Education edu = new Education();
-                    edu.UserID = cUserID;
-                    db.Educations.Add(edu);
-                    db.SaveChanges();
-                    educ = db.Educations.SingleOrDefault(c => c.UserID == cUserID);
-                }*/
-
-
-                //tbFirstName.Text = ut.FirstName;
-                //tbLastName.Text = ut.LastName;
-                //tbDisplayName.Text = ut.DisplayName;
-
-                // Populate Address data
-                //var addr = db.Addresses.SingleOrDefault(c => c.UserID == cUserID);
-                //if (addr == null)
-                //{
-                //    Address adr = new Address();
-                //    adr.UserID = cUserID;
-                //    //adr.
-
-                //}
-                //List<string> States = GetCou
+                #endregion
             }
         }
-
-        public List<string> GetCountryList()
-        {
-            List<string> list = new List<string>();
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.InstalledWin32Cultures | CultureTypes.SpecificCultures);
-            foreach (CultureInfo info in cultures)
-            {
-                RegionInfo info2 = new RegionInfo(info.LCID);
-                if (!list.Contains(info2.EnglishName))
-                {
-                    list.Add(info2.EnglishName);
-                }
-            }
-            return list;
-        }
-        /*
-        public List<string> GetStateList()
-        {
-            List<string> list = new List<string>();
-            CultureInfo[]
-        }*/
 
 //        public int GetSelectedIndex(string id)
 //        {
-//            int iLoop;
+        //            int iLoop;
 
-//Dim iLoop as Integer
-//Dim dt as DataTable
-//dt = myDs.Tables(0)
-//For iLoop = 0 to dt.Rows.Count - 1
-//If Int32.Parse(id) = Int32.Parse(dt.Rows(iLoop)("dbIdfield")) Then
-//Return iLoop
-//End If
-//Next iLoop
-//End Function
+        #region EmptyEvents
+        protected void ListView3_DataBound(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void DropDownListAddrStateEditingDataBound(object sender, EventArgs e)
+        {
+
+        }
+
+
+        protected void DropDownListAddrState0_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        protected void ListView5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void InsertButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void InsertButton_Command(object sender, CommandEventArgs e)
+        {
+
+        }
 
         protected void Wizard1_FinishButtonClick(object sender, WizardNavigationEventArgs e)
         {
 
         }
-
 
         protected void bUpdateObjective_Click(object sender, EventArgs e)
         {
@@ -195,14 +173,14 @@ namespace DocWebtest1
 
         protected void ListView4_DataBound(object sender, EventArgs e)
         {
-            //if (ListView4.
+            
         }
 
         protected void ListView4_ItemEditing(object sender, ListViewEditEventArgs e)
         {
-            //e.NewEditIndex;
             
         }
+        #endregion
 
         protected void ListView4_ItemDataBound(object sender, ListViewItemEventArgs e)
         {
@@ -211,6 +189,7 @@ namespace DocWebtest1
                 DataRowView drv = (DataRowView)e.Item.DataItem;
                 int lvdindex = e.Item.DataItemIndex;
                 string st = drv.Row["State"].ToString();
+                string ct = drv.Row["Country"].ToString();
                 TextBox txtb = (TextBox)e.Item.FindControl("CityTextBox");
                 if (e.Item.DisplayIndex == ListView4.EditIndex)
                 {
@@ -221,35 +200,20 @@ namespace DocWebtest1
 //                        ddls.SelectedValue = st;
                         SqlDataSourceAddr.UpdateParameters["State"].DefaultValue = st.Trim();
                     }
+                    DropDownList ddlc = (DropDownList)e.Item.FindControl("DropDownListAddrCountryEditing");
+                    if (ddlc != null)
+                    {
+                        ListItem lic = ddlc.Items.FindByValue(ct.Trim());
+                        if (lic != null)
+                        {
+                            lic.Selected = true;
+                            SqlDataSourceAddr.UpdateParameters["Country"].DefaultValue = ct.Trim();
+                        }
+                    }
                 }
-                //lblp.Text = phn == null ? "" : String.Format("{0:(###) ###-####}", Convert.ToInt64(phn));
-
-                
-/*                ListViewDataItem dataItem = (ListViewDataItem)e.Item;
-                if (dataItem.DisplayIndex == ListView4.EditIndex)
-                {
-
-                    DropDownList list = (DropDownList)dataItem.FindControl("DropDownListAddrStateEditing");
-
-                }*/
-
             }
         }
 
-        protected void ListView5_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void InsertButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void InsertButton_Command(object sender, CommandEventArgs e)
-        {
-
-        }
 
         protected void ListView3_ItemDataBound(object sender, ListViewItemEventArgs e)
         {
@@ -263,21 +227,7 @@ namespace DocWebtest1
             }
         }
 
-        protected void ListView3_DataBound(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void DropDownListAddrStateEditingDataBound(object sender, EventArgs e)
-        {
-
-        }
-
-
-        protected void DropDownListAddrState0_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+        
 
         protected void DropDownListSchoolStateEditing_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -301,6 +251,17 @@ namespace DocWebtest1
             }
         }
 
+        protected void DropDownListAddrCountryEditing_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                DropDownList ddl = (DropDownList)sender;
+                int currIndex = ddl.SelectedIndex;
+                string currVal = ddl.SelectedValue;
+                SqlDataSourceAddr.UpdateParameters["Country"].DefaultValue = currVal;
+            }
+        }
+
         protected void DropDownListCompanyStateEditing_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender != null)
@@ -318,6 +279,11 @@ namespace DocWebtest1
             if (ddl != null)
             {
                 SqlDataSourceAddr.UpdateParameters["State"].DefaultValue = ddl.SelectedValue;
+            }
+            DropDownList ddlc = ListView4.Items[e.ItemIndex].FindControl("DropDownListAddrCountryEditing") as DropDownList;
+            if (ddlc != null)
+            {
+                SqlDataSourceAddr.UpdateParameters["Country"].DefaultValue = ddlc.SelectedValue;
             }
         }
 
@@ -408,9 +374,6 @@ namespace DocWebtest1
                     ed.IsCurrent = false;
                 }
                 db.SaveChanges();
-
-              
-
             }
         }
 
@@ -470,6 +433,24 @@ namespace DocWebtest1
                 string edt = drv.Row["EndDate"].ToString();
                 DateTime ddt = Convert.ToDateTime(drv.Row["StartDate"]);
                 DateTime eddt = Convert.ToDateTime(drv.Row["EndDate"]);
+
+                HiddenField hfexpid = e.Item.FindControl("ExpIDHidden") as HiddenField;
+                if (hfexpid != null)
+                {
+                    string s = hfexpid.Value;
+                    SqlDataSource dsach1 = e.Item.FindControl("SqlDataSourceAch1") as SqlDataSource;
+                    SqlDataSource dsach2 = e.Item.FindControl("SqlDataSourceAch2") as SqlDataSource;
+                    if (dsach1 != null)
+                    {
+                        dsach1.InsertParameters["ExperienceID"].DefaultValue = s;
+                    }
+                    if (dsach2 != null)
+                    {
+                        dsach2.SelectParameters["ExperienceID"].DefaultValue = s.Trim();
+                    }
+                }
+
+
                 if (ListView6.EditIndex != e.Item.DisplayIndex)
                 {
                     Label lblp = (Label)e.Item.FindControl("StartDateLabel");
@@ -500,6 +481,44 @@ namespace DocWebtest1
                     }
                 }
             }
+        }
+
+        protected void ListView7_ItemDataBound(object sender, ListViewItemEventArgs e)
+        {
+
+        }
+
+        protected void ListView7_ItemInserting(object sender, ListViewInsertEventArgs e)
+        {
+            ListView lv = sender as ListView;
+            if (lv != null)
+            {
+                ListViewDataItem ldvi = lv.Parent as ListViewDataItem;
+                if (ldvi != null)
+                {
+                    SqlDataSource sqlDS = ldvi.FindControl("SqlDataSourceAch1") as SqlDataSource;
+                    HiddenField hfexpid = ldvi.FindControl("ExpIDHidden") as HiddenField;
+                    sqlDS.InsertParameters["ExperienceID"].DefaultValue = hfexpid.Value.Trim();
+                    TextBox tb = e.Item.FindControl("DescriptionTextBox") as TextBox;
+                    sqlDS.InsertParameters["Description"].DefaultValue = tb.Text.Trim();
+
+                }
+            }
+        }
+
+        protected void ListView7_ItemEditing(object sender, ListViewEditEventArgs e)
+        {
+
+        }
+
+        protected void ListView7_ItemCommand(object sender, ListViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void ListView7a_ItemDataBound(object sender, ListViewItemEventArgs e)
+        {
+
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DocWebtest1.Models.Mapping
 
             // Properties
             this.Property(t => t.SkillsText)
-                .HasMaxLength(50);
+                .HasMaxLength(250);
 
             // Table & Column Mappings
             this.ToTable("Skills");

@@ -20,6 +20,7 @@ namespace DocWebtest1.Models
         public string CompanyCity { get; set; }
         public string JobTitle { get; set; }
         public int UserID { get; set; }
+        public string CompanyCountry { get; set; }
         public virtual ICollection<Achievement> Achievements { get; set; }
         public virtual Usertable Usertable { get; set; }
         public virtual ICollection<ResumeExperience> ResumeExperiences { get; set; }

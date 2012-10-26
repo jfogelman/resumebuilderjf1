@@ -25,6 +25,9 @@ namespace DocWebtest1.Models.Mapping
                 .IsFixedLength()
                 .HasMaxLength(20);
 
+            this.Property(t => t.CompanyCountry)
+                .HasMaxLength(50);
+
             // Table & Column Mappings
             this.ToTable("Experiences");
             this.Property(t => t.ID).HasColumnName("ID");
@@ -36,6 +39,7 @@ namespace DocWebtest1.Models.Mapping
             this.Property(t => t.CompanyCity).HasColumnName("CompanyCity");
             this.Property(t => t.JobTitle).HasColumnName("JobTitle");
             this.Property(t => t.UserID).HasColumnName("UserID");
+            this.Property(t => t.CompanyCountry).HasColumnName("CompanyCountry");
 
             // Relationships
             this.HasRequired(t => t.Usertable)
