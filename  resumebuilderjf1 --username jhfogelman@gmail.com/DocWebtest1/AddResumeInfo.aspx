@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
     CodeBehind="AddResumeInfo.aspx.cs" Inherits="DocWebtest1.AddResumeInfo" %>
 
+<%@ Register Assembly="DocWebtest1" Namespace="DocWebtest1" TagPrefix="cc1" %>
 <%@ Register TagPrefix="ajax" Namespace="AjaxControlToolkit" Assembly="AjaxControlToolkit" %>
 <%@ Register Assembly="CKEditor.NET" Namespace="CKEditor.NET" TagPrefix="cke" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
@@ -52,6 +53,7 @@
                         </asp:SqlDataSource>
                         <h3>
                             EMAILS</h3>
+                        #region EmailListView
                         <asp:ListView ID="ListView2" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSource1"
                             InsertItemPosition="LastItem">
                             <AlternatingItemTemplate>
@@ -432,7 +434,9 @@
                                         <asp:TextBox ID="CityTextBox" runat="server" Text='<%# Bind("City") %>' />
                                     </td>
                                     <td>
-                                        <asp:DropDownList ID="DropDownListAddrStateEditing" runat="server" OnSelectedIndexChanged="DropDownListAddrStateEditing_SelectedIndexChanged">
+                                        <cc1:StateDropDownList ID="DropDownListAddrStateEditing" runat="server" OnSelectedIndexChanged="DropDownListAddrStateEditing_SelectedIndexChanged">
+                                        </cc1:StateDropDownList>
+                                        <%--<asp:DropDownList ID="DropDownListAddrStateEditing" runat="server" OnSelectedIndexChanged="DropDownListAddrStateEditing_SelectedIndexChanged">
                                             <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                             <asp:ListItem Value="AK">Alaska</asp:ListItem>
                                             <asp:ListItem Value="AZ">Arizona</asp:ListItem>
@@ -484,11 +488,13 @@
                                             <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                             <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                             <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                        </asp:DropDownList>
+                                        </asp:DropDownList>--%>
                                         <%-- <asp:TextBox ID="StateTextBox" runat="server" Text='<%# Bind("State") %>' Visible="false"/>--%>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />
+                                        <%--<asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />--%>
+                                        <cc1:CountryDropDownList ID="DropDownListAddrCountryEditing" runat="server" OnSelectedIndexChanged="DropDownListAddrCountryEditing_SelectedIndexChanged">
+                                        </cc1:CountryDropDownList>
                                     </td>
                                     <td>
                                         <ajax:MaskedEditExtender runat="server" TargetControlID="ZipcodeTextBox" Mask="99999"
@@ -526,7 +532,10 @@
                                         <asp:TextBox ID="CityTextBox" runat="server" Text='<%# Bind("City") %>' />
                                     </td>
                                     <td>
-                                        <asp:DropDownList ID="DropDownListAddrStateInserting" runat="server" SelectedValue='<%# Bind("State") %>'
+                                        <cc1:StateDropDownList ID="DropDownListAddrStateInserting" runat="server" SelectedValue='<%# Bind("State") %>'
+                                            OnDataBound="DropDownListAddrState_DataBound">
+                                        </cc1:StateDropDownList>
+                                        <%--<asp:DropDownList ID="DropDownListAddrStateInserting" runat="server" SelectedValue='<%# Bind("State") %>'
                                             OnDataBound="DropDownListAddrState_DataBound">
                                             <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                             <asp:ListItem Value="AK">Alaska</asp:ListItem>
@@ -579,11 +588,13 @@
                                             <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                             <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                             <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                        </asp:DropDownList>
+                                        </asp:DropDownList>--%>
                                         <%--<asp:TextBox ID="StateTextBox" runat="server" Text='<%# Bind("State") %>' />--%>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />
+                                        <%-- <asp:TextBox ID="CountryTextBox" runat="server" Text='<%# Bind("Country") %>' />--%>
+                                        <cc1:CountryDropDownList ID="DropDownListAddrCountryInserting" runat="server" SelectedValue='<%# Bind("Country") %>'>
+                                        </cc1:CountryDropDownList>
                                     </td>
                                     <td>
                                         <ajax:MaskedEditExtender runat="server" TargetControlID="ZipcodeTextBox" Mask="99999"
@@ -784,9 +795,61 @@
                                     <asp:CheckBox ID="IsCurrentCheckBox" runat="server" Checked='<%# Eval("IsCurrent") %>'
                                         Enabled="False" Text="Current?" />
                                     <br />
+                                    <asp:ListView ID="ListView7a" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSourceAch2"
+                                        OnItemDataBound="ListView7a_ItemDataBound">
+                                        <AlternatingItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="AlternatingItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #FFFFFF; color: #284775;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                                <br />
+                                            </li>
+                                        </AlternatingItemTemplate>
+                                        <EmptyDataTemplate>
+                                            No data was returned.
+                                        </EmptyDataTemplate>
+                                        <ItemSeparatorTemplate>
+                                            <br />
+                                        </ItemSeparatorTemplate>
+                                        <ItemTemplate>
+                                            <li style="background-color: #E0FFFF; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                            </li>
+                                        </ItemTemplate>
+                                        <LayoutTemplate>
+                                            <ul id="itemPlaceholderContainer" runat="server" style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                                <li runat="server" id="itemPlaceholder" />
+                                            </ul>
+                                            <%--<div style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF;">
+                                                <asp:DataPager ID="DataPager2" runat="server">
+                                                    <Fields>
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" 
+                                                            ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                                        <asp:NumericPagerField />
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" 
+                                                            ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                                    </Fields>
+                                                </asp:DataPager>
+                                            </div>--%>
+                                        </LayoutTemplate>
+                                        <SelectedItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="SelectedItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                            </li>
+                                        </SelectedItemTemplate>
+                                    </asp:ListView>
+                                    <asp:SqlDataSource ID="SqlDataSourceAch2" runat="server" ConnectionString="<%$ ConnectionStrings:usertest1Context %>"
+                                        SelectCommand="SELECT * FROM [Achievements] WHERE ([ExperienceID] = @ExperienceID)">
+                                        <SelectParameters>
+                                            <asp:ControlParameter ControlID="ExpIDHidden" Name="ExperienceID" PropertyName="Value"
+                                                Type="Int32" />
+                                        </SelectParameters>
+                                    </asp:SqlDataSource>
+                                    <br />
                                     <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
                                     <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
-                                </li>
+                                    <asp:HiddenField ID="ExpIDHidden" runat="server" Value='<%# Eval("ID", "{0}") %>'
+                                        Visible="False" />
                                 </li>
                             </AlternatingItemTemplate>
                             <EditItemTemplate>
@@ -797,7 +860,9 @@
                                     <asp:TextBox ID="CompanyNameTextBox" runat="server" Text='<%# Bind("CompanyName") %>' />
                                     <br />
                                     State:
-                                    <asp:DropDownList ID="DropDownListCompanyStateEditing" runat="server" OnSelectedIndexChanged="DropDownListCompanyStateEditing_SelectedIndexChanged">
+                                    <cc1:StateDropDownList ID="DropDownListCompanyStateEditing" runat="server" OnSelectedIndexChanged="DropDownListCompanyStateEditing_SelectedIndexChanged">
+                                    </cc1:StateDropDownList>
+                                    <%--<asp:DropDownList ID="DropDownListCompanyStateEditing" runat="server" OnSelectedIndexChanged="DropDownListCompanyStateEditing_SelectedIndexChanged">
                                         <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                         <asp:ListItem Value="AK">Alaska</asp:ListItem>
                                         <asp:ListItem Value="AZ">Arizona</asp:ListItem>
@@ -849,9 +914,8 @@
                                         <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                         <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                         <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                    </asp:DropDownList>
-                                    &nbsp;City:
-                                    <asp:TextBox ID="CompanyCityTextBox" runat="server" Text='<%# Bind("CompanyCity") %>' />
+                                    </asp:DropDownList>--%>
+                                    &nbsp;<asp:TextBox ID="CompanyCityTextBox" runat="server" Text='<%# Bind("CompanyCity") %>' />
                                     <br />
                                     Start Date:
                                     <asp:TextBox ID="StartDateTextBox" runat="server" Text='<%# Bind("StartDate") %>' />
@@ -861,17 +925,109 @@
                                     <ajax:CalendarExtender ID="StartDateTextBox_CalendarExtender" runat="server" Enabled="True"
                                         TargetControlID="StartDateTextBox" Format="MM/yyyy">
                                     </ajax:CalendarExtender>--%>
-                                    End Date:
-                                    <asp:TextBox ID="EndDateTextBox" runat="server" Text='<%# Bind("EndDate") %>' />
-                                    <%--<ajax:MaskedEditExtender runat="server" TargetControlID="EndDateTextBox" Mask="99/9999"
-                                        Century="2000" MaskType="Date" ClearMaskOnLostFocus="false" AutoComplete="true"
-                                        ID="sdatemsk2" />--%>
-                                <br />
+                                    &nbsp;<asp:TextBox ID="EndDateTextBox" runat="server" Text='<%# Bind("EndDate") %>' />
+                                    <br />
                                     <asp:CheckBox ID="IsCurrentCheckBox" runat="server" Checked='<%# Bind("IsCurrent") %>'
                                         Text="Current?" />
                                     <br />
+                                    <asp:ListView ID="ListView7" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSourceAch1"
+                                        InsertItemPosition="LastItem" OnItemCommand="ListView7_ItemCommand" OnItemDataBound="ListView7_ItemDataBound"
+                                        OnItemEditing="ListView7_ItemEditing" OnItemInserting="ListView7_ItemInserting">
+                                        <AlternatingItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="AlternatingItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #FFFFFF; color: #284775;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                                <br />
+                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                                            </li>
+                                        </AlternatingItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="EditItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #999999;">
+                                                <asp:TextBox ID="DescriptionTextBox" runat="server" Text='<%# Bind("Description") %>' />
+                                                <br />
+                                                <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />
+                                                <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
+                                            </li>
+                                        </EditItemTemplate>
+                                        <EmptyDataTemplate>
+                                            No data was returned.
+                                        </EmptyDataTemplate>
+                                        <InsertItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="InsertItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style=""
+                                                <asp:TextBox ID="DescriptionTextBox" runat="server" Text='<%# Bind("Description") %>' />
+                                                <br />
+                                                <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="Insert" />
+                                                <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Clear" />
+                                            </li>
+                                        </InsertItemTemplate>
+                                        <ItemSeparatorTemplate>
+                                            <br />
+                                        </ItemSeparatorTemplate>
+                                        <ItemTemplate>
+                                            <li style="background-color: #E0FFFF; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                                <br />
+                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                                            </li>
+                                        </ItemTemplate>
+                                        <LayoutTemplate>
+                                            <ul id="itemPlaceholderContainer" runat="server" style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                                <li runat="server" id="itemPlaceholder" />
+                                            </ul>
+                                            <div style="text-align: center; background-color: #5D7B9D; font-family: Verdana, Arial, Helvetica, sans-serif;
+                                                color: #FFFFFF;">
+                                                <asp:DataPager ID="DataPager2" runat="server">
+                                                    <Fields>
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False"
+                                                            ShowPreviousPageButton="False" />
+                                                        <asp:NumericPagerField />
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" ShowNextPageButton="False"
+                                                            ShowPreviousPageButton="False" />
+                                                    </Fields>
+                                                </asp:DataPager>
+                                            </div>
+                                        </LayoutTemplate>
+                                        <SelectedItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="SelectedItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                                <br />
+                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                                            </li>
+                                        </SelectedItemTemplate>
+                                    </asp:ListView>
+                                    <asp:SqlDataSource ID="SqlDataSourceAch1" runat="server" ConnectionString="<%$ ConnectionStrings:usertest1Context %>"
+                                        DeleteCommand="DELETE FROM [Achievements] WHERE [ID] = @ID" InsertCommand="INSERT INTO [Achievements] ([Description], [ExperienceID]) VALUES (@Description, @ExperienceID)"
+                                        SelectCommand="SELECT * FROM [Achievements] WHERE ([ExperienceID] = @ExperienceID)"
+                                        UpdateCommand="UPDATE [Achievements] SET [Description] = @Description WHERE [ID] = @ID">
+                                        <DeleteParameters>
+                                            <asp:Parameter Name="ID" Type="Int32" />
+                                        </DeleteParameters>
+                                        <InsertParameters>
+                                            <asp:Parameter Name="Description" Type="String" />
+                                            <asp:Parameter Name="ExperienceID" Type="Int32" />
+                                        </InsertParameters>
+                                        <SelectParameters>
+                                            <asp:ControlParameter ControlID="ExpIDHidden" Name="ExperienceID" PropertyName="Value"
+                                                Type="Int32" />
+                                        </SelectParameters>
+                                        <UpdateParameters>
+                                            <asp:Parameter Name="Description" Type="String" />
+                                            <asp:Parameter Name="ID" Type="Int32" />
+                                        </UpdateParameters>
+                                    </asp:SqlDataSource>
+                                    <br />
                                     <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />
                                     <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
+                                    <asp:HiddenField ID="ExpIDHidden" runat="server" Value='<%# Eval("ID", "{0}") %>'
+                                        Visible="False" />
+                                </li>
+                                <br />
                                 </li>
                             </EditItemTemplate>
                             <EmptyDataTemplate>
@@ -885,7 +1041,9 @@
                                     <asp:TextBox ID="CompanyNameTextBox" runat="server" Text='<%# Bind("CompanyName") %>' />
                                     <br />
                                     State:
-                                    <asp:DropDownList ID="DropDownListCompanyStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
+                                    <cc1:StateDropDownList ID="DropDownListCompanyStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
+                                    </cc1:StateDropDownList>
+                                    <%--<asp:DropDownList ID="DropDownListCompanyStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
                                         <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                         <asp:ListItem Value="AK">Alaska</asp:ListItem>
                                         <asp:ListItem Value="AZ">Arizona</asp:ListItem>
@@ -937,7 +1095,7 @@
                                         <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                         <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                         <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                    </asp:DropDownList>
+                                    </asp:DropDownList>--%>
                                     &nbsp;City:
                                     <asp:TextBox ID="CompanyCityTextBox" runat="server" Text='<%# Bind("CompanyCity") %>' />
                                     <br />
@@ -954,13 +1112,13 @@
                                     <ajax:MaskedEditExtender runat="server" TargetControlID="EndDateTextBox" Mask="99/9999"
                                         Century="2000" MaskType="Date" ClearMaskOnLostFocus="false" AutoComplete="true"
                                         ID="sdatemsk2" />
-                                    <asp:CheckBox ID="IsCurrentCheckBox" runat="server" 
-                                        Checked='<%# Bind("IsCurrent") %>' Text="Current?" />
+                                    <asp:CheckBox ID="IsCurrentCheckBox" runat="server" Checked='<%# Bind("IsCurrent") %>'
+                                        Text="Current?" />
                                     <br />
-                                    <asp:Button ID="InsertButton" runat="server" CommandName="Insert" 
-                                        Text="Insert" />
-                                    <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" 
-                                        Text="Clear" />
+                                    <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="Insert" />
+                                    <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Clear" />
+                                    <asp:HiddenField ID="ExpIDHidden" runat="server" Value='<%# Eval("ID", "{0}") %>'
+                                        Visible="False" />
                                 </li>
                             </InsertItemTemplate>
                             <ItemSeparatorTemplate>
@@ -985,87 +1143,31 @@
                                     <asp:CheckBox ID="IsCurrentCheckBox" runat="server" Checked='<%# Eval("IsCurrent") %>'
                                         Enabled="False" Text="Current?" />
                                     <br />
-                                    <asp:ListView ID="ListView7" runat="server" DataKeyNames="ID" 
-                                        DataSourceID="SqlDataSourceAch1" InsertItemPosition="LastItem">
+                                    <asp:ListView ID="ListView7a" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSourceAch2"
+                                        OnItemDataBound="ListView7a_ItemDataBound">
                                         <AlternatingItemTemplate>
-                                            <li style="background-color: #FFFFFF;color: #284775;">ID:
-                                                <asp:Label ID="IDLabel" runat="server" Text='<%# Eval("ID") %>' />
+                                            <asp:PlaceHolder runat="server" ID="AlternatingItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #FFFFFF; color: #284775;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
                                                 <br />
-                                                Description:
-                                                <asp:Label ID="DescriptionLabel" runat="server" 
-                                                    Text='<%# Eval("Description") %>' />
-                                                <br />
-                                                ExperienceID:
-                                                <asp:Label ID="ExperienceIDLabel" runat="server" 
-                                                    Text='<%# Eval("ExperienceID") %>' />
-                                                <br />
-                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
-                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
-                                                    Text="Delete" />
                                             </li>
                                         </AlternatingItemTemplate>
-                                        <EditItemTemplate>
-                                            <li style="background-color: #999999;">ID:
-                                                <asp:Label ID="IDLabel1" runat="server" Text='<%# Eval("ID") %>' />
-                                                <br />
-                                                Description:
-                                                <asp:TextBox ID="DescriptionTextBox" runat="server" 
-                                                    Text='<%# Bind("Description") %>' />
-                                                <br />
-                                                ExperienceID:
-                                                <asp:TextBox ID="ExperienceIDTextBox" runat="server" 
-                                                    Text='<%# Bind("ExperienceID") %>' />
-                                                <br />
-                                                <asp:Button ID="UpdateButton" runat="server" CommandName="Update" 
-                                                    Text="Update" />
-                                                <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" 
-                                                    Text="Cancel" />
-                                            </li>
-                                        </EditItemTemplate>
                                         <EmptyDataTemplate>
                                             No data was returned.
                                         </EmptyDataTemplate>
-                                        <InsertItemTemplate>
-                                            <li style="">Description:
-                                                <asp:TextBox ID="DescriptionTextBox" runat="server" 
-                                                    Text='<%# Bind("Description") %>' />
-                                                <br />
-                                                ExperienceID:
-                                                <asp:TextBox ID="ExperienceIDTextBox" runat="server" 
-                                                    Text='<%# Bind("ExperienceID") %>' />
-                                                <br />
-                                                <asp:Button ID="InsertButton" runat="server" CommandName="Insert" 
-                                                    Text="Insert" />
-                                                <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" 
-                                                    Text="Clear" />
-                                            </li>
-                                        </InsertItemTemplate>
                                         <ItemSeparatorTemplate>
                                             <br />
                                         </ItemSeparatorTemplate>
                                         <ItemTemplate>
-                                            <li style="background-color: #E0FFFF;color: #333333;">ID:
-                                                <asp:Label ID="IDLabel" runat="server" Text='<%# Eval("ID") %>' />
-                                                <br />
-                                                Description:
-                                                <asp:Label ID="DescriptionLabel" runat="server" 
-                                                    Text='<%# Eval("Description") %>' />
-                                                <br />
-                                                ExperienceID:
-                                                <asp:Label ID="ExperienceIDLabel" runat="server" 
-                                                    Text='<%# Eval("ExperienceID") %>' />
-                                                <br />
-                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
-                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
-                                                    Text="Delete" />
+                                            <li style="background-color: #E0FFFF; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
                                             </li>
                                         </ItemTemplate>
                                         <LayoutTemplate>
-                                            <ul ID="itemPlaceholderContainer" runat="server" 
-                                                style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                            <ul id="itemPlaceholderContainer" runat="server" style="font-family: Verdana, Arial, Helvetica, sans-serif;">
                                                 <li runat="server" id="itemPlaceholder" />
                                             </ul>
-                                            <div style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF;">
+                                           <%--<div style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF;">
                                                 <asp:DataPager ID="DataPager2" runat="server">
                                                     <Fields>
                                                         <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" 
@@ -1075,49 +1177,28 @@
                                                             ShowNextPageButton="False" ShowPreviousPageButton="False" />
                                                     </Fields>
                                                 </asp:DataPager>
-                                            </div>
+                                            </div>--%>
                                         </LayoutTemplate>
                                         <SelectedItemTemplate>
-                                            <li style="background-color: #E2DED6;font-weight: bold;color: #333333;">ID:
-                                                <asp:Label ID="IDLabel" runat="server" Text='<%# Eval("ID") %>' />
-                                                <br />
-                                                Description:
-                                                <asp:Label ID="DescriptionLabel" runat="server" 
-                                                    Text='<%# Eval("Description") %>' />
-                                                <br />
-                                                ExperienceID:
-                                                <asp:Label ID="ExperienceIDLabel" runat="server" 
-                                                    Text='<%# Eval("ExperienceID") %>' />
-                                                <br />
-                                                <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
-                                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
-                                                    Text="Delete" />
+                                            <asp:PlaceHolder runat="server" ID="SelectedItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
                                             </li>
                                         </SelectedItemTemplate>
                                     </asp:ListView>
-                                    <asp:SqlDataSource ID="SqlDataSourceAch1" runat="server" 
-                                        ConnectionString="<%$ ConnectionStrings:usertest1Context %>" 
-                                        DeleteCommand="DELETE FROM [Achievements] WHERE [ID] = @ID" 
-                                        InsertCommand="INSERT INTO [Achievements] ([Description], [ExperienceID]) VALUES (@Description, @ExperienceID)" 
-                                        SelectCommand="SELECT * FROM [Achievements] WHERE ([ExperienceID] = @ExperienceID)" 
-                                        UpdateCommand="UPDATE [Achievements] SET [Description] = @Description, [ExperienceID] = @ExperienceID WHERE [ID] = @ID">
-                                        <DeleteParameters>
-                                            <asp:Parameter Name="ID" Type="Int32" />
-                                        </DeleteParameters>
-                                        <InsertParameters>
-                                            <asp:Parameter Name="Description" Type="String" />
-                                            <asp:Parameter Name="ExperienceID" Type="Int32" />
-                                        </InsertParameters>
+                                    <asp:SqlDataSource ID="SqlDataSourceAch2" runat="server" ConnectionString="<%$ ConnectionStrings:usertest1Context %>"
+                                        SelectCommand="SELECT * FROM [Achievements] WHERE ([ExperienceID] = @ExperienceID)">
                                         <SelectParameters>
-                                            <asp:ControlParameter ControlID="ExpIDHidden" Name="ExperienceID" 
-                                                PropertyName="Value" Type="Int32" />
+                                            <asp:ControlParameter ControlID="ExpIDHidden" Name="ExperienceID" PropertyName="Value"
+                                                Type="Int32" />
                                         </SelectParameters>
-                                        <UpdateParameters>
-                                            <asp:Parameter Name="Description" Type="String" />
-                                            <asp:Parameter Name="ExperienceID" Type="Int32" />
-                                            <asp:Parameter Name="ID" Type="Int32" />
-                                        </UpdateParameters>
                                     </asp:SqlDataSource>
+                                    <br />
+                                    <asp:HiddenField ID="ExpIDHidden" runat="server" Value='<%# Eval("ID", "{0}") %>'
+                                        Visible="False" />
+                                    <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                    <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                                    <br />
                                 </li>
                             </ItemTemplate>
                             <LayoutTemplate>
@@ -1131,13 +1212,6 @@
                                     ValidationGroup="EditExpValidationGroup" />
                                 <ul id="itemPlaceholderContainer" runat="server" style="font-family: Verdana, Arial, Helvetica, sans-serif;">
                                     <li runat="server" id="itemPlaceholder" />
-                                    <asp:HiddenField ID="ExpIDHidden" runat="server" 
-                                        Value='<%# Eval("ID", "{0}") %>' Visible="False" />
-                                    <br />
-                                    <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
-                                    <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
-                                        Text="Delete" />
-                                    </li>
                                 </ul>
                                 <div style="text-align: center; background-color: #CCCCCC; font-family: Verdana, Arial, Helvetica, sans-serif;
                                     color: #000000;">
@@ -1171,15 +1245,68 @@
                                     <asp:CheckBox ID="IsCurrentCheckBox" runat="server" Checked='<%# Eval("IsCurrent") %>'
                                         Enabled="False" Text="Current" />
                                     <br />
+                                    <br />
+                                    <asp:ListView ID="ListView7a" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSourceAch2"
+                                        OnItemDataBound="ListView7a_ItemDataBound">
+                                        <AlternatingItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="AlternatingItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #E0FFFF; color: #284775;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                                <br />
+                                            </li>
+                                        </AlternatingItemTemplate>
+                                        <EmptyDataTemplate>
+                                            No data was returned.
+                                        </EmptyDataTemplate>
+                                        <ItemSeparatorTemplate>
+                                            <br />
+                                        </ItemSeparatorTemplate>
+                                        <ItemTemplate>
+                                            <li style="background-color: #E0FFFF; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                            </li>
+                                        </ItemTemplate>
+                                        <LayoutTemplate>
+                                            <ul id="itemPlaceholderContainer" runat="server" style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                                <li runat="server" id="itemPlaceholder" />
+                                            </ul>
+                                            <%--<div style="text-align: center;background-color: #5D7B9D;font-family: Verdana, Arial, Helvetica, sans-serif;color: #FFFFFF;">
+                                                <asp:DataPager ID="DataPager2" runat="server">
+                                                    <Fields>
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" 
+                                                            ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                                        <asp:NumericPagerField />
+                                                        <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" 
+                                                            ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                                    </Fields>
+                                                </asp:DataPager>
+                                            </div>--%>
+                                        </LayoutTemplate>
+                                        <SelectedItemTemplate>
+                                            <asp:PlaceHolder runat="server" ID="SelectedItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
+                                            <li style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                                            </li>
+                                        </SelectedItemTemplate>
+                                    </asp:ListView>
+                                    <asp:SqlDataSource ID="SqlDataSourceAch2" runat="server" ConnectionString="<%$ ConnectionStrings:usertest1Context %>"
+                                        SelectCommand="SELECT * FROM [Achievements] WHERE ([ExperienceID] = @ExperienceID)">
+                                        <SelectParameters>
+                                            <asp:ControlParameter ControlID="ExpIDHidden" Name="ExperienceID" PropertyName="Value"
+                                                Type="Int32" />
+                                        </SelectParameters>
+                                    </asp:SqlDataSource>
                                     <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
                                     <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                                    <asp:HiddenField ID="ExpIDHidden" runat="server" Value='<%# Eval("ID", "{0}") %>'
+                                        Visible="False" />
                                 </li>
                             </SelectedItemTemplate>
                         </asp:ListView>
                         <asp:SqlDataSource ID="SqlDataSourceExperiences" runat="server" ConnectionString="<%$ ConnectionStrings:usertest1Context %>"
-                            DeleteCommand="DELETE FROM [Experiences] WHERE [ID] = @ID" InsertCommand="INSERT INTO [Experiences] ([IsCurrent], [StartDate], [EndDate], [CompanyName], [CompanyState], [CompanyCity], [JobTitle], [UserID]) VALUES (@IsCurrent, @StartDate, @EndDate, @CompanyName, @CompanyState, @CompanyCity, @JobTitle, @UserID)"
+                            DeleteCommand="DELETE FROM [Experiences] WHERE [ID] = @ID" InsertCommand="INSERT INTO [Experiences] ([IsCurrent], [StartDate], [EndDate], [CompanyName], [CompanyState], [CompanyCity], [CompanyCountry], [JobTitle], [UserID]) VALUES (@IsCurrent, @StartDate, @EndDate, @CompanyName, @CompanyState, @CompanyCity, @CompanyCountry, @JobTitle, @UserID)"
                             SelectCommand="SELECT * FROM [Experiences] WHERE ([UserID] = @UserID) ORDER BY [EndDate]"
-                            UpdateCommand="UPDATE [Experiences] SET [IsCurrent] = @IsCurrent, [StartDate] = @StartDate, [EndDate] = @EndDate, [CompanyName] = @CompanyName, [CompanyState] = @CompanyState, [CompanyCity] = @CompanyCity, [JobTitle] = @JobTitle WHERE [ID] = @ID">
+                            UpdateCommand="UPDATE [Experiences] SET [IsCurrent] = @IsCurrent, [StartDate] = @StartDate, [EndDate] = @EndDate, [CompanyName] = @CompanyName, [CompanyState] = @CompanyState, [CompanyCity] = @CompanyCity, [CompanyCountry] = @CompanyCountry, , [JobTitle] = @JobTitle WHERE [ID] = @ID">
                             <DeleteParameters>
                                 <asp:Parameter Name="ID" Type="Int32" />
                             </DeleteParameters>
@@ -1190,6 +1317,7 @@
                                 <asp:Parameter Name="CompanyName" Type="String" />
                                 <asp:Parameter Name="CompanyState" Type="String" />
                                 <asp:Parameter Name="CompanyCity" Type="String" />
+                                <asp:Parameter Name="CompanyCountry" />
                                 <asp:Parameter Name="JobTitle" Type="String" />
                                 <asp:Parameter Name="UserID" Type="Int32" />
                             </InsertParameters>
@@ -1203,6 +1331,7 @@
                                 <asp:Parameter Name="CompanyName" Type="String" />
                                 <asp:Parameter Name="CompanyState" Type="String" />
                                 <asp:Parameter Name="CompanyCity" Type="String" />
+                                <asp:Parameter Name="CompanyCountry" />
                                 <asp:Parameter Name="JobTitle" Type="String" />
                                 <asp:Parameter Name="ID" Type="Int32" />
                             </UpdateParameters>
@@ -1259,7 +1388,9 @@
                                     City:
                                     <asp:TextBox ID="SchoolCityTextBox" runat="server" Text='<%# Bind("SchoolCity") %>' />
                                     State:
-                                    <asp:DropDownList ID="DropDownListSchoolStateEditing" runat="server" OnSelectedIndexChanged="DropDownListSchoolStateEditing_SelectedIndexChanged">
+                                    <cc1:StateDropDownList ID="DropDownListSchoolStateEditing" runat="server" OnSelectedIndexChanged="DropDownListSchoolStateEditing_SelectedIndexChanged">
+                                    </cc1:StateDropDownList>
+                                    <%--<asp:DropDownList ID="DropDownListSchoolStateEditing" runat="server" OnSelectedIndexChanged="DropDownListSchoolStateEditing_SelectedIndexChanged">
                                         <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                         <asp:ListItem Value="AK">Alaska</asp:ListItem>
                                         <asp:ListItem Value="AZ">Arizona</asp:ListItem>
@@ -1311,7 +1442,7 @@
                                         <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                         <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                         <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                    </asp:DropDownList>
+                                    </asp:DropDownList>--%>
                                     <%--<asp:TextBox ID="SchoolStateTextBox" runat="server" Text='<%# Bind("SchoolState") %>' />--%>
                                     Country:
                                     <asp:TextBox ID="SchoolCountryTextBox" runat="server" Text='<%# Bind("SchoolCountry") %>' />
@@ -1358,7 +1489,9 @@
                                     City:
                                     <asp:TextBox ID="SchoolCityTextBox" runat="server" Text='<%# Bind("SchoolCity") %>' />
                                     State:
-                                    <asp:DropDownList ID="DropDownListSchoolStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
+                                    <cc1:StateDropDownList ID="DropDownListSchoolStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
+                                    </cc1:StateDropDownList>
+                                    <%--<asp:DropDownList ID="DropDownListSchoolStateInserting" runat="server" SelectedValue='<%# Bind("SchoolState") %>'>
                                         <asp:ListItem Value="AL">Alabama</asp:ListItem>
                                         <asp:ListItem Value="AK">Alaska</asp:ListItem>
                                         <asp:ListItem Value="AZ">Arizona</asp:ListItem>
@@ -1410,7 +1543,7 @@
                                         <asp:ListItem Value="WV">West Virginia</asp:ListItem>
                                         <asp:ListItem Value="WI">Wisconsin</asp:ListItem>
                                         <asp:ListItem Value="WY">Wyoming</asp:ListItem>
-                                    </asp:DropDownList>
+                                    </asp:DropDownList>--%>
                                     <%-- <asp:TextBox ID="SchoolStateTextBox" runat="server" Text='<%# Bind("SchoolState") %>'
                                 Width="30px" />--%>
                                     Country:
@@ -1585,7 +1718,7 @@
                                 <asp:Parameter Name="ID" Type="Int32" />
                             </UpdateParameters>
                         </asp:SqlDataSource>
-                        test2<br />
+                        <br />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </asp:WizardStep>
@@ -1600,7 +1733,7 @@
         </WizardSteps>
     </asp:Wizard>
     <p>
-        asda
+        
     </p>
     <p>
         &nbsp;</p>
