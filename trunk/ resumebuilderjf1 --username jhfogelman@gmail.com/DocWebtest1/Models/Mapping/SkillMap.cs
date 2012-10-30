@@ -14,11 +14,15 @@ namespace DocWebtest1.Models.Mapping
             this.Property(t => t.SkillsText)
                 .HasMaxLength(250);
 
+            this.Property(t => t.Description)
+                .HasMaxLength(50);
+
             // Table & Column Mappings
             this.ToTable("Skills");
             this.Property(t => t.ID).HasColumnName("ID");
             this.Property(t => t.SkillsText).HasColumnName("SkillsText");
             this.Property(t => t.UserID).HasColumnName("UserID");
+            this.Property(t => t.Description).HasColumnName("Description");
 
             // Relationships
             this.HasRequired(t => t.Usertable)
