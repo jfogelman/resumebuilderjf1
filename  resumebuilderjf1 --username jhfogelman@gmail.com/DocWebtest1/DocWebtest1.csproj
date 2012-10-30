@@ -76,6 +76,7 @@
     <Content Include="acct\Login.aspx" />
     <Content Include="acct\Register.aspx" />
     <Content Include="acct\WebForm1.aspx" />
+    <Content Include="AddResumeInfo.aspx" />
     <Content Include="BasicProfile.aspx" />
     <Content Include="img\mainbanner.png" />
     <Content Include="Copy of WebForm1.aspx" />
@@ -140,6 +141,13 @@
     </Compile>
     <Compile Include="acct\WebForm1.aspx.designer.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AddResumeInfo.aspx.cs">
+      <DependentUpon>AddResumeInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddResumeInfo.aspx.designer.cs">
+      <DependentUpon>AddResumeInfo.aspx</DependentUpon>
     </Compile>
     <Compile Include="BasicProfile.aspx.cs">
       <DependentUpon>BasicProfile.aspx</DependentUpon>

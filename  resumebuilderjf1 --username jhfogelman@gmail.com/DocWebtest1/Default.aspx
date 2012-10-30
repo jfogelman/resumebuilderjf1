@@ -18,10 +18,14 @@
         </p>
     <p>
         Step 3:</p>
+<p>
+        <a href="ListResumes.aspx">Build Resume</a></p>
+<p>
+        Step 4:</p>
     <p>
         Choose Resume Template</p>
     <p>
-        Step 4:</p>
+        Step 5:</p>
     <p>
         Export Resume</p>
 </asp:Content>
