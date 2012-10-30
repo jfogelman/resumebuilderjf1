@@ -103,6 +103,42 @@ namespace DocWebtest1 {
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceAddresses;
         
         /// <summary>
+        /// GridViewExperiences control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewExperiences;
+        
+        /// <summary>
+        /// SqlDataSourceExperiences control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceExperiences;
+        
+        /// <summary>
+        /// GridViewEducations control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewEducations;
+        
+        /// <summary>
+        /// SqlDataSourceEducations control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSourceEducations;
+        
+        /// <summary>
         /// bCreateNewResume control.
         /// </summary>
         /// <remarks>

@@ -37,9 +37,51 @@ namespace DocWebtest1
                 Resume res = new Resume();
                 res.Description = tbResumeName.Text;
                 res.UserID = iUserID;
+                if (GridViewPhones.SelectedIndex > 0)
+                    res.PhoneID = Convert.ToInt32(GridViewPhones.SelectedValue);
+                if (GridViewEmails.SelectedIndex > 0)
+                    res.EmailID = Convert.ToInt32(GridViewEmails.SelectedValue);
+                if (GridViewAddresses.SelectedIndex > 0)
+                    res.AddressID = Convert.ToInt32(GridViewAddresses.SelectedValue);
+                System.Collections.ArrayList alExps = new System.Collections.ArrayList();
+                foreach (GridViewRow row in GridViewExperiences.Rows)
+                {
+                    if (row.Cells[5].Text == "Selected")
+                    {
+                        alExps.Add(GridViewExperiences.DataKeys[row.RowIndex]);
+                    }
+                }
+                System.Collections.ArrayList alEdu = new System.Collections.ArrayList();
+                foreach (GridViewRow row in GridViewEducations.Rows)
+                {
+                    if (row.Cells[4].Text == "Selected")
+                    {
+                        alEdu.Add(GridViewEducations.DataKeys[row.RowIndex]);
+                    }
+                }
+
+
                 db.Resumes.Add(res);
                 if (db.SaveChanges() > 0)
                 {
+                    int iResumeID = res.ID;
+                    foreach (DataKey obj in alExps)
+                    {
+                        int iExpID = Convert.ToInt32(obj.Value);
+                        ResumeExperience resex = new ResumeExperience();
+                        resex.ExperienceID = iExpID;
+                        resex.ResumeID = iResumeID;
+                        db.ResumeExperiences.Add(resex);
+                    }
+                    foreach (DataKey obj in alEdu)
+                    {
+                        int iEduID = Convert.ToInt32(obj.Value);
+                        ResumeEducation resed = new ResumeEducation();
+                        resed.EducationID = iEduID;
+                        resed.ResumeID = iResumeID;
+                        db.ResumeEducations.Add(resed);
+                    }
+                    db.SaveChanges();
                     Response.Redirect("ListResumes.aspx");
                 }
             }
@@ -73,6 +115,18 @@ namespace DocWebtest1
                 row.Cells[5].Text = "";
             }
             GridViewAddresses.SelectedRow.Cells[5].Text = "Selected";
+        }
+
+        protected void GridViewExperiences_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridViewExperiences.SelectedRow.Cells[5].Text = (GridViewExperiences.SelectedRow.Cells[5].Text.Length == 0 ||
+            GridViewExperiences.SelectedRow.Cells[5].Text=="&nbsp;"?"Selected":"");
+        }
+
+        protected void GridViewEducations_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridViewEducations.SelectedRow.Cells[4].Text = (GridViewEducations.SelectedRow.Cells[4].Text.Length == 0 ||
+            GridViewEducations.SelectedRow.Cells[4].Text == "&nbsp;" ? "Selected" : "");
         }
     }
 }

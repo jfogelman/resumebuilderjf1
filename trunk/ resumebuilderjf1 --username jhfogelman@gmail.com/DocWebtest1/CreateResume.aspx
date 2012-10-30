@@ -29,6 +29,7 @@
                         <asp:TemplateField HeaderText="Selected">
                             <ItemStyle Font-Bold="True" ForeColor="#00CC00"  HorizontalAlign="Center" />
                         </asp:TemplateField>
+                        <asp:BoundField DataField="ID" HeaderText="ID" Visible="False" />
                     </Columns>
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSourcePhones" runat="server" 
@@ -54,6 +55,7 @@
                         <asp:TemplateField HeaderText="Selected">
                             <ItemStyle Font-Bold="True" ForeColor="#00CC00" HorizontalAlign="Center" />
                         </asp:TemplateField>
+                        <asp:BoundField DataField="ID" HeaderText="ID" Visible="False" />
                     </Columns>
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSourceEmails" runat="server" 
@@ -81,6 +83,7 @@
                         <asp:TemplateField HeaderText="Selected">
                             <ItemStyle Font-Bold="True" ForeColor="#00CC00" HorizontalAlign="Center" />
                         </asp:TemplateField>
+                        <asp:BoundField DataField="ID" HeaderText="ID" Visible="False" />
                     </Columns>
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSourceAddresses" runat="server" 
@@ -94,11 +97,61 @@
             <p>
                 Work History</p>
             <p>
-                &nbsp;</p>
+                <asp:GridView ID="GridViewExperiences" runat="server" 
+                    AutoGenerateColumns="False" DataKeyNames="ID" 
+                    DataSourceID="SqlDataSourceExperiences" 
+                    onselectedindexchanged="GridViewExperiences_SelectedIndexChanged" Width="515px">
+                    <Columns>
+                        <asp:CommandField ShowSelectButton="True" />
+                        <asp:BoundField DataField="StartDate" DataFormatString="{0:MM/yyyy}" 
+                            HeaderText="Start Date" SortExpression="StartDate" />
+                        <asp:BoundField DataField="EndDate" DataFormatString="{0:MM/yyyy}" 
+                            HeaderText="End Date" SortExpression="EndDate" />
+                        <asp:BoundField DataField="CompanyName" HeaderText="Company" 
+                            SortExpression="CompanyName" />
+                        <asp:BoundField DataField="JobTitle" HeaderText="Job Title" 
+                            SortExpression="JobTitle" />
+                        <asp:TemplateField HeaderText="Selected">
+                        <ItemStyle Font-Bold="True" ForeColor="#00CC00"  HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="ID" HeaderText="ID" Visible="False" />
+                    </Columns>
+                </asp:GridView>
+                <asp:SqlDataSource ID="SqlDataSourceExperiences" runat="server" 
+                    ConnectionString="<%$ ConnectionStrings:usertest1Context %>" 
+                    SelectCommand="SELECT * FROM [Experiences] WHERE ([UserID] = @UserID)">
+                    <SelectParameters>
+                        <asp:SessionParameter Name="UserID" SessionField="UserID" Type="Int32" />
+                    </SelectParameters>
+                </asp:SqlDataSource>
+            </p>
             <p>
-                Education</p>
-            <p>
-                &nbsp;</p>
+                Education<asp:GridView ID="GridViewEducations" runat="server" 
+                    AutoGenerateColumns="False" DataKeyNames="ID" 
+                    DataSourceID="SqlDataSourceEducations" 
+                    onselectedindexchanged="GridViewEducations_SelectedIndexChanged" Width="446px">
+                    <Columns>
+                        <asp:CommandField ShowSelectButton="True" />
+                        <asp:BoundField DataField="SchoolName" HeaderText="School" 
+                            SortExpression="SchoolName" />
+                        <asp:BoundField DataField="DegreeName" HeaderText="Degree Name" 
+                            SortExpression="DegreeName" />
+                        <asp:BoundField DataField="DegreeTitle" HeaderText="Degree Title" 
+                            SortExpression="DegreeTitle" />
+                        <asp:TemplateField HeaderText="Selected">
+                        <ItemStyle Font-Bold="True" ForeColor="#00CC00"  HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="ID" Visible="False" />
+                    </Columns>
+                </asp:GridView>
+                <asp:SqlDataSource ID="SqlDataSourceEducations" runat="server" 
+                    ConnectionString="<%$ ConnectionStrings:usertest1Context %>" 
+                    SelectCommand="SELECT * FROM [Educations] WHERE ([UserID] = @UserID)">
+                    <SelectParameters>
+                        <asp:SessionParameter Name="UserID" SessionField="UserID" Type="Int32" />
+                    </SelectParameters>
+                </asp:SqlDataSource>
+            </p>
             <p>
                 <asp:Button ID="bCreateNewResume" runat="server" 
                     onclick="bCreateNewResume_Click" Text="Create New Resume" />
