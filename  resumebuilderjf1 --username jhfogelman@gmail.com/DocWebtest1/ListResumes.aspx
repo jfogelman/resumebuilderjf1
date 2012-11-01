@@ -15,11 +15,15 @@
                     AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="ID" 
                     DataSourceID="SqlDataSourceResumes" 
                     onselectedindexchanged="GridView1_SelectedIndexChanged" 
-                    style="margin-right: 168px" Width="356px">
+                    style="margin-right: 168px" Width="356px" 
+                    onrowcreated="GridView1_RowCreated" onrowdatabound="GridView1_RowDataBound">
                     <Columns>
                         <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" />
                         <asp:BoundField DataField="Description" HeaderText="Resume Name" 
                             SortExpression="Description" />
+                        <asp:HyperLinkField DataTextField="Description" 
+                            NavigateUrl="~/CreateResume.aspx" SortExpression="Description" 
+                            Text="Resume Name" />
                     </Columns>
                     <EmptyDataTemplate>
                         No current resumes exist - please create one!

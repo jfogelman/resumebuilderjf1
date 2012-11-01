@@ -3,16 +3,29 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
-        Create New Resume<br />
+        <asp:Label ID="LabelPageHeader" runat="server" Text="Create New Resume"></asp:Label>
+        <br />
         <ajaxToolkit:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" />
     </h2>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
             <p>
                 <strong>
-                <asp:Label ID="Label1" runat="server" Text="Resume Name: "></asp:Label>
-                </strong>&nbsp;<strong><asp:TextBox ID="tbResumeName" runat="server"></asp:TextBox>
                 </strong>
+            </p>
+            <asp:ValidationSummary ID="ValidationSummary1" runat="server" ValidationGroup="ValidationGroupResumeName" />
+            <asp:ValidationSummary ID="ValidationSummary2" runat="server" />
+            <p>
+                <asp:Label ID="Label1" runat="server" Text="Resume Name: "></asp:Label>
+                </strong>&nbsp;<strong><asp:TextBox ID="tbResumeName" runat="server" CausesValidation="true"></asp:TextBox>
+                </strong>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidatorResumeName" runat="server" 
+                    ErrorMessage="Resume Name is Required" ControlToValidate="tbResumeName" Display="Dynamic"
+                    ValidationGroup="ValidationGroupResumeName" ForeColor="Red">*</asp:RequiredFieldValidator>
+                <asp:CustomValidator ID="UniqueResumeName" runat="server"
+                 ErrorMessage="Resume name is already in use" ControlToValidate="tbResumeName"
+                    ValidationGroup="ValidationGroupResumeName" ForeColor="Red" 
+                    onservervalidate="UniqueResumeName_ServerValidate">*</asp:CustomValidator>
             </p>
             <p>
                 &nbsp;Add Phone Numbers</p>
@@ -153,9 +166,14 @@
                 </asp:SqlDataSource>
             </p>
             <p>
-                <asp:Button ID="bCreateNewResume" runat="server" 
+                <asp:Button ID="bCreateNewResume" runat="server"  CausesValidation="true" ValidationGroup="ValidationGroupResumeName" 
                     onclick="bCreateNewResume_Click" Text="Create New Resume" />
+                <asp:Button ID="bUpdateResume" runat="server"
+                    Text="Update Resume"  Visible ="false" 
+                    Width="161px" onclick="bUpdateResume_Click"/>
+
             </p>
+
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>
