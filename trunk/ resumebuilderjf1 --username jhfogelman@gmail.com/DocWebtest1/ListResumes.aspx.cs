@@ -18,5 +18,45 @@ namespace DocWebtest1
         {
 
         }
+
+        protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row != null)
+            {
+                var obj = e.Row.FindControl("ctl02");
+                if (obj != null)
+                {
+                    if (obj.GetType().Equals(typeof(HyperLink)))
+                    {
+                        HyperLink hlc = (HyperLink)obj;
+                        if (hlc != null)
+                        {
+                            hlc.NavigateUrl = hlc.NavigateUrl + "?action=edit&editid=" + GridView1.DataKeys[e.Row.DataItemIndex].Value;
+                        }
+                    }
+                    else
+                    {
+                        obj = e.Row.FindControl("ctl03");
+                        if (obj != null)
+                        {
+                            if (obj.GetType().Equals(typeof(HyperLink)))
+                            {
+                                HyperLink hlc = (HyperLink)obj;
+                                if (hlc != null)
+                                {
+                                    hlc.NavigateUrl = hlc.NavigateUrl + "?action=edit&editid=" + GridView1.DataKeys[e.Row.DataItemIndex].Value;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
     }
 }
