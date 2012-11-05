@@ -33,61 +33,63 @@ namespace DocWebtest1
                     this.bCreateNewResume.Visible = false;
                     this.bUpdateResume.Visible = true;
                     bEditing = true;
-                    currRes = db.Resumes.First(c => c.ID == iEditId);
+                    if (!Page.IsPostBack)
+                    {
+                        currRes = db.Resumes.First(c => c.ID == iEditId);
 
-                    tbResumeName.Text = currRes.Description == null ? "" : currRes.Description;
+                        tbResumeName.Text = currRes.Description == null ? "" : currRes.Description;
 
-                    int iPhoneId = FindSelectedRowIndex(NullToNeg(currRes.PhoneID), GridViewPhones);
-                    if (iPhoneId > -1)
-                    {
-                        GridViewPhones.SelectedIndex = iPhoneId;
-                        GridViewPhones.SelectedRow.Cells[3].Text = "Selected";
-                    }
-                    int iEmailId = FindSelectedRowIndex(NullToNeg(currRes.EmailID), GridViewEmails);
-                    if (iEmailId > -1)
-                    {
-                        GridViewEmails.SelectedIndex = iEmailId;
-                        GridViewEmails.SelectedRow.Cells[3].Text = "Selected";
-                        
-                    }
-                    int iAddressId = FindSelectedRowIndex(NullToNeg(currRes.AddressID), GridViewAddresses);
-                    if (iAddressId > -1)
-                    {
-                        GridViewAddresses.SelectedIndex = iAddressId;
-                        GridViewAddresses.SelectedRow.Cells[5].Text = "Selected";
-                    }
-
-                    //ResumeExperience
-                    var resexps = (from c in db.ResumeExperiences
-                                     where c.ResumeID == iEditId
-                                     select c);
-                    if (resexps != null)
-                    {
-                        foreach (ResumeExperience resex in resexps)
+                        int iPhoneId = FindSelectedRowIndex(NullToNeg(currRes.PhoneID), GridViewPhones);
+                        if (iPhoneId > -1)
                         {
-                            int iResEx = FindSelectedRowIndex(NullToNeg(resex.ExperienceID), GridViewExperiences);
-                            if (iResEx > -1)
+                            GridViewPhones.SelectedIndex = iPhoneId;
+                            GridViewPhones.SelectedRow.Cells[3].Text = "Selected";
+                        }
+                        int iEmailId = FindSelectedRowIndex(NullToNeg(currRes.EmailID), GridViewEmails);
+                        if (iEmailId > -1)
+                        {
+                            GridViewEmails.SelectedIndex = iEmailId;
+                            GridViewEmails.SelectedRow.Cells[3].Text = "Selected";
+
+                        }
+                        int iAddressId = FindSelectedRowIndex(NullToNeg(currRes.AddressID), GridViewAddresses);
+                        if (iAddressId > -1)
+                        {
+                            GridViewAddresses.SelectedIndex = iAddressId;
+                            GridViewAddresses.SelectedRow.Cells[5].Text = "Selected";
+                        }
+
+                        //ResumeExperience
+                        var resexps = (from c in db.ResumeExperiences
+                                       where c.ResumeID == iEditId
+                                       select c);
+                        if (resexps != null)
+                        {
+                            foreach (ResumeExperience resex in resexps)
                             {
-                                GridViewExperiences.Rows[iResEx].Cells[5].Text = "Selected";
+                                int iResEx = FindSelectedRowIndex(NullToNeg(resex.ExperienceID), GridViewExperiences);
+                                if (iResEx > -1)
+                                {
+                                    GridViewExperiences.Rows[iResEx].Cells[5].Text = "Selected";
+                                }
+                            }
+                        }
+
+                        var resedus = (from c in db.ResumeEducations
+                                       where c.ResumeID == iEditId
+                                       select c);
+                        if (resedus != null)
+                        {
+                            foreach (ResumeEducation resedu in resedus)
+                            {
+                                int iResed = FindSelectedRowIndex(NullToNeg(resedu.EducationID), GridViewEducations);
+                                if (iResed > -1)
+                                {
+                                    GridViewEducations.Rows[iResed].Cells[4].Text = "Selected";
+                                }
                             }
                         }
                     }
-
-                    var resedus = (from c in db.ResumeEducations
-                                   where c.ResumeID == iEditId
-                                   select c);
-                    if (resedus != null)
-                    {
-                        foreach (ResumeEducation resedu in resedus)
-                        {
-                            int iResed = FindSelectedRowIndex(NullToNeg(resedu.EducationID), GridViewEducations);
-                            if (iResed > -1)
-                            {
-                                GridViewEducations.Rows[iResed].Cells[4].Text = "Selected";
-                            }
-                        }
-                    }
-
 
 
                 }
@@ -132,9 +134,20 @@ namespace DocWebtest1
 
                 string cUsername = Membership.GetUser().UserName;
                 int cUserID = SessionHandler.GetUserID(cUsername);
-                Resume res = new Resume();
+                Resume res = new Resume(); //= new Resume();currRes = db.Resumes.First(c => c.ID == iEditId);
                 if (bEditing)
-                    res = currRes;
+                {
+                    string sEditid = Request.QueryString["editid"];
+                    if (sEditid != null)
+                    {
+                        int iEditId = Convert.ToInt32(sEditid);
+                        res = db.Resumes.First(c => c.ID == iEditId);
+                    }
+                }
+                else
+                {
+                    res = new Resume();
+                }
                 res.Description = tbResumeName.Text;
                 res.UserID = iUserID;
 
@@ -145,8 +158,8 @@ namespace DocWebtest1
                 if (skobj != null)
                     res.SkillsID = skobj.ID;
 
-                if (GridViewPhones.SelectedIndex > 0)
-                    res.PhoneID = Convert.ToInt32(GridViewPhones.SelectedValue);
+                //if (GridViewPhones.SelectedIndex > 0)
+                //    res.PhoneID = Convert.ToInt32(GridViewPhones.SelectedValue);
                 if (GridViewEmails.SelectedIndex > 0)
                     res.EmailID = Convert.ToInt32(GridViewEmails.SelectedValue);
                 if (GridViewAddresses.SelectedIndex > 0)
@@ -168,13 +181,14 @@ namespace DocWebtest1
                     }
                 }
 
-
                 if (!bEditing)
                     db.Resumes.Add(res);
-                
-                if (db.SaveChanges() > 0)
+
+                int dbRes = db.SaveChanges();
+                int iResumeID = res.ID;
+
+                if (bEditing)
                 {
-                    int iResumeID = res.ID;
                     if (bEditing)
                     {
                         var re = (from c in db.ResumeExperiences
@@ -188,24 +202,27 @@ namespace DocWebtest1
                         foreach (ResumeEducation r in rd)
                             db.ResumeEducations.Remove(r);
                     }
+                }
 
+                foreach (DataKey expobj in alExps)
+                {
+                    int iExpID = Convert.ToInt32(expobj.Value);
+                    ResumeExperience resex = new ResumeExperience();
+                    resex.ExperienceID = iExpID;
+                    resex.ResumeID = iResumeID;
+                    db.ResumeExperiences.Add(resex);
+                }
+                foreach (DataKey eduobj in alEdu)
+                {
+                    int iEduID = Convert.ToInt32(eduobj.Value);
+                    ResumeEducation resed = new ResumeEducation();
+                    resed.EducationID = iEduID;
+                    resed.ResumeID = iResumeID;
+                    db.ResumeEducations.Add(resed);
+                }
 
-                    foreach (DataKey expobj in alExps)
-                    {
-                        int iExpID = Convert.ToInt32(expobj.Value);
-                        ResumeExperience resex = new ResumeExperience();
-                        resex.ExperienceID = iExpID;
-                        resex.ResumeID = iResumeID;
-                        db.ResumeExperiences.Add(resex);
-                    }
-                    foreach (DataKey eduobj in alEdu)
-                    {
-                        int iEduID = Convert.ToInt32(eduobj.Value);
-                        ResumeEducation resed = new ResumeEducation();
-                        resed.EducationID = iEduID;
-                        resed.ResumeID = iResumeID;
-                        db.ResumeEducations.Add(resed);
-                    }
+                if ((bEditing && dbRes == 0) || dbRes > 0)
+                {
                     db.SaveChanges();
                     Response.Redirect("ListResumes.aspx");
                 }
