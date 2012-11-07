@@ -13,9 +13,16 @@ namespace DocWebtest1
         {
             if (Session["UserID"] == null)
             {
-                System.Web.Security.MembershipUser muser = System.Web.Security.Membership.GetUser();
-                if (muser != null)
-                    Session["UserID"] = SessionHandler.GetUserID(muser.UserName);
+                try
+                {
+                    System.Web.Security.MembershipUser muser = System.Web.Security.Membership.GetUser();
+                    if (muser != null)
+                        Session["UserID"] = SessionHandler.GetUserID(muser.UserName);
+                }
+                catch (Exception e2)
+                {
+                    Console.Write(e2);
+                }
             }
         }
     }

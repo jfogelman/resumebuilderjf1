@@ -23,6 +23,7 @@ namespace DocWebtest1
                 this.SqlDataSourceAddr.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
                 this.SqlDataSourceEducation.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
                 this.SqlDataSourceExperiences.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
+                this.SqlDataSourceSkills.InsertParameters["UserID"].DefaultValue = iUserID.ToString();
             }
 
             if (Page.IsPostBack)
@@ -34,15 +35,15 @@ namespace DocWebtest1
 
                 if (Page.Request.Params.AllKeys.Contains("ctl00$MainContent$Wizard1$bUpdateSkills"))
                 {
-                    var skl = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
+                    //var skl = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
 
-                    string encoded = Server.HtmlEncode(ckeditor1.Text);
-                    encoded = encoded.Replace(@"\", "&bslash").Replace(@"/", "&slash").Replace("\r\n", "&newline").Replace("\t", "&tab");
-                    skl.SkillsText = encoded;
+                    //string encoded = Server.HtmlEncode(ckeditor1.Text);
+                    //encoded = encoded.Replace(@"\", "&bslash").Replace(@"/", "&slash").Replace("\r\n", "&newline").Replace("\t", "&tab");
+                    //skl.SkillsText = encoded;
                     
-                    db.SaveChanges();
-                    lblSkills.Text = "Succesfully updated skills!";
-                    lblSkills.Visible = true;
+                    //db.SaveChanges();
+                    //lblSkills.Text = "Succesfully updated skills!";
+                    //lblSkills.Visible = true;
                 }
                 else if (Page.Request.Params.AllKeys.Contains("ctl00$MainContent$Wizard1$bUpdateObjective"))
                 {
@@ -67,22 +68,22 @@ namespace DocWebtest1
 
                 /* Skills setup 
                  * */
-                #region skillssetup
-                var skl = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
-                if (skl == null)
-                {
-                    Skill sk = new Skill();
-                    sk.UserID = cUserID;
-                    db.Skills.Add(sk);
-                    db.SaveChanges();
-                    sk = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
-                }
-                string decoded = Server.HtmlDecode(skl.SkillsText);
-                if (decoded != null)
+                //#region skillssetup
+                //var skl = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
+                //if (skl == null)
+                //{
+                //    Skill sk = new Skill();
+                //    sk.UserID = cUserID;
+                //    db.Skills.Add(sk);
+                //    db.SaveChanges();
+                //    sk = db.Skills.SingleOrDefault(c => c.UserID == cUserID);
+                //}
+                //string decoded = Server.HtmlDecode(skl.SkillsText);
+                //if (decoded != null)
+                //    decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab","\t");
+                //ckeditor1.Text = Server.HtmlDecode(decoded == null ? "" : decoded);
+                //#endregion
                 //    decoded = decoded.Replace("&bslash", "\\");
-                    decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab","\t");
-                ckeditor1.Text = Server.HtmlDecode(decoded == null ? "" : decoded);
-                #endregion
 
                 #region objectivessetup
                 var obj = db.Objectives.SingleOrDefault(c => c.UserID == cUserID);
@@ -99,6 +100,76 @@ namespace DocWebtest1
                 tbOjbective.Text = obj.ObjectiveText == null ? "" : obj.ObjectiveText;
                 #endregion
             }
+        }
+
+        public static string EncodeCKEditorText(string cktext, HttpServerUtility Server)
+        {
+            string text = "";
+            string encoded = Server.HtmlEncode(cktext);
+            encoded = encoded.Replace(@"\", "&bslash").Replace(@"/", "&slash").Replace("\r\n", "&newline").Replace("\t", "&tab");
+            text = encoded;
+
+            return text;
+        }
+
+        public static string EncodeCKEditorText(string cktext)
+        {
+            string text = "";
+            string encoded = HttpUtility.HtmlEncode(cktext);
+            encoded = encoded.Replace(@"\", "&bslash").Replace(@"/", "&slash").Replace("\r\n", "&newline").Replace("\t", "&tab");
+            text = encoded;
+
+            return text;
+        }
+
+        public static string EncodeCKEditorText(object cktext)
+        {
+            string text = "";
+            if (cktext.GetType().Equals(typeof(String)))
+            {
+                string encoded = HttpUtility.HtmlEncode(cktext.ToString());
+                encoded = encoded.Replace(@"\", "&bslash").Replace(@"/", "&slash").Replace("\r\n", "&newline").Replace("\t", "&tab");
+                text = encoded;
+            }
+            return text;
+        }
+
+
+        public static string DecodeCKEditorText(object textobj)
+        {
+            string cktext = "";
+            if (textobj.GetType().Equals(typeof(String)))
+            {
+                string decoded = HttpUtility.HtmlDecode(textobj.ToString());
+                if (decoded != null)
+                    decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab", "\t");
+                cktext = HttpUtility.HtmlDecode(decoded == null ? "" : decoded);
+            }
+
+            return cktext;
+        }
+
+        public static string DecodeCKEditorText(string text)
+        {
+            string cktext = "";
+            string decoded = HttpUtility.HtmlDecode(text);
+            if (decoded != null)
+                decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab", "\t");
+            cktext = HttpUtility.HtmlDecode(decoded == null ? "" : decoded);
+
+
+            return cktext;
+        }
+        public static string DecodeCKEditorText(string text, HttpServerUtility Server)
+        {
+            string cktext = "";
+            string decoded = Server.HtmlDecode(text);
+            if (decoded != null)
+                decoded = decoded.Replace("&bslash", @"\").Replace("&slash", @"/").Replace("&newline", "\r\n").Replace("&tab","\t");
+            cktext = Server.HtmlDecode(decoded == null ? "" : decoded);
+
+
+            return cktext;
         }
 
 //        public int GetSelectedIndex(string id)
@@ -181,6 +252,36 @@ namespace DocWebtest1
             
         }
         #endregion
+
+        protected void ListViewSkills_ItemUpdating(object sender, ListViewUpdateEventArgs e)
+        {
+            CKEditor.NET.CKEditorControl ckeditor = ListViewSkills.Items[e.ItemIndex].FindControl("ckeditor1") as CKEditor.NET.CKEditorControl;
+            if (ckeditor != null)
+            {
+                ckeditor.Text = EncodeCKEditorText(ckeditor.Text);
+            }
+        }
+
+        protected void ListViewSkills_ItemDataBound(object sender, ListViewItemEventArgs e)
+        {
+            if (e.Item != null)// && ListView5.EditIndex < 0)
+            {
+                DataRowView drv = (DataRowView)e.Item.DataItem;
+                int lvdindex = e.Item.DataItemIndex;
+                CKEditor.NET.CKEditorControl ckeditor = (CKEditor.NET.CKEditorControl)e.Item.FindControl("ckeditor1");
+                if (ckeditor != null)
+                {
+                    if (ListViewSkills.EditIndex > -1)
+                    {
+                        ckeditor.Text = DecodeCKEditorText(ckeditor.Text);
+                    }
+                    else
+                    {
+                        ckeditor.Text = DecodeCKEditorText(ckeditor.Text);
+                    }
+                }
+            }
+        }
 
         protected void ListView4_ItemDataBound(object sender, ListViewItemEventArgs e)
         {

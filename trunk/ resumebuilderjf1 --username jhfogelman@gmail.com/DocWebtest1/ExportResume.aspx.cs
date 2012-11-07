@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocWebtest1.Models;
 
 namespace DocWebtest1
 {
@@ -22,7 +23,10 @@ namespace DocWebtest1
         protected void Button2_Click(object sender, EventArgs e)
         {
      //       ExportModule.WriteDocInPlace(TextBox1.Text, "test1.docx", Response);
-            ExportModule.TestExport();
+            var db = new usertest1Context();
+
+            Resume res = db.Resumes.SingleOrDefault(c => c.ID == 10);
+            ExportModule.TestExport(res);
         }
     }
 }
