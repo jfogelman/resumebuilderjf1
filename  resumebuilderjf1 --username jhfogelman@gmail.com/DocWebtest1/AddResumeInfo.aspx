@@ -9,7 +9,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     &nbsp;&nbsp;&nbsp;
     <ajax:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" />
-    <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="2" BackColor="#EFF3FB" BorderColor="#B5C7DE"
+    <asp:Wizard ID="Wizard1" runat="server" ActiveStepIndex="4" BackColor="#EFF3FB" BorderColor="#B5C7DE"
         BorderWidth="1px" Font-Names="Verdana" Font-Size="1.0em" Height="215px" Width="753px"
         OnFinishButtonClick="Wizard1_FinishButtonClick">
         <HeaderStyle BackColor="#284E98" BorderColor="#EFF3FB" BorderStyle="Solid" BorderWidth="2px"
@@ -53,7 +53,6 @@
                         </asp:SqlDataSource>
                         <h3>
                             EMAILS</h3>
-                        #region EmailListView
                         <asp:ListView ID="ListView2" runat="server" DataKeyNames="ID" DataSourceID="SqlDataSource1"
                             InsertItemPosition="LastItem">
                             <AlternatingItemTemplate>
@@ -956,7 +955,7 @@
                                         </EmptyDataTemplate>
                                         <InsertItemTemplate>
                                             <asp:PlaceHolder runat="server" ID="InsertItemTemplateDummyPlaceholder1"></asp:PlaceHolder>
-                                            <li style=""
+                                            <li style="">
                                                 <asp:TextBox ID="DescriptionTextBox" runat="server" Text='<%# Bind("Description") %>' />
                                                 <br />
                                                 <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="Insert" />
@@ -1723,11 +1722,163 @@
                 </asp:UpdatePanel>
             </asp:WizardStep>
             <asp:WizardStep runat="server" Title="Skills">
-                <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" Toolbar="Basic"></cke:CKEditorControl>
+                <asp:UpdatePanel runat="server" >
+                
+                    <ContentTemplate>
+                        <asp:ListView ID="ListViewSkills" runat="server" DataKeyNames="ID"   OnItemDataBound="ListViewSkills_ItemDataBound"
+                         OnItemUpdating="ListViewSkills_ItemUpdating"
+                            DataSourceID="SqlDataSourceSkills" InsertItemPosition="LastItem">
+                            <AlternatingItemTemplate>
+                            <asp:PlaceHolder runat="server" ID="AlternatingItemTemplateDummyPlaceholder"></asp:PlaceHolder>
+                                <li style="background-color: #FAFAD2;color: #284775;">
+                                    Label:
+                                    <asp:Label ID="DescriptionLabel" runat="server" 
+                                        Text='<%# Eval("Description") %>' />
+                                    <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" 
+                                        Toolbar="None" ReadOnly="True" ToolbarStartupExpanded="False" 
+                                        ContentsCss="/ckeditor1/contents.css" Height="69px" 
+                                        TemplatesFiles="/ckeditor1/plugins/templates/templates/default.js" 
+                                        Text='<%# Eval("SkillsText") %>'
+                                        Width="494px"></cke:CKEditorControl>
+                                    <br />
+                                    <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                    <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
+                                        Text="Delete" />
+                                </li>
+                            </AlternatingItemTemplate>
+                            <EditItemTemplate>
+                                <asp:PlaceHolder runat="server" ID="EditItemTemplateDummyPlaceholder"></asp:PlaceHolder>
+                                <li style="background-color: #FFCC66;color: #000080;">
+                                    Label:
+                                    <asp:TextBox ID="DescriptionTextBox" runat="server" 
+                                        Text='<%# Bind("Description") %>' />
+                                    <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" 
+                                        Toolbar="Basic"
+                                        ContentsCss="/ckeditor1/contents.css" Height="69px" 
+                                        TemplatesFiles="/ckeditor1/plugins/templates/templates/default.js" 
+                                        Text='<%# Bind("SkillsText") %>'
+                                        Width="494px"></cke:CKEditorControl>
+                                    <br />
+                                    <asp:Button ID="UpdateButton" runat="server" CommandName="Update" 
+                                        Text="Update" />
+                                    <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" 
+                                        Text="Cancel" />
+                                </li>
+                            </EditItemTemplate>
+                            <EmptyDataTemplate>
+                                No data was returned.
+                            </EmptyDataTemplate>
+                            <InsertItemTemplate>
+                            <asp:PlaceHolder runat="server" ID="InsertItemTemplateDummyPlaceholder"></asp:PlaceHolder>
+                                <li style="">
+                                    Label:
+                                    <asp:TextBox ID="DescriptionTextBox" runat="server" 
+                                        Text='<%# Bind("Description") %>' />
+                                    <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" 
+                                        Toolbar="Basic"
+                                        ContentsCss="/ckeditor1/contents.css" Height="69px" 
+                                        TemplatesFiles="/ckeditor1/plugins/templates/templates/default.js" 
+                                        Text='<%# Bind("SkillsText") %>'
+                                        Width="494px"></cke:CKEditorControl>
+                                    <br />
+                                    <asp:Button ID="InsertButton" runat="server" CommandName="Insert" 
+                                        Text="Insert" />
+                                    <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" 
+                                        Text="Clear" />
+                                </li>
+                            </InsertItemTemplate>
+                            <ItemSeparatorTemplate>
+                                <br />
+                            </ItemSeparatorTemplate>
+                            <ItemTemplate>
+                                <asp:PlaceHolder runat="server" ID="ItemTemplateDummyPlaceholder"></asp:PlaceHolder>
+                                <li style="background-color: #FFFBD6;color: #333333;">
+                                    Label:
+                                    <asp:Label ID="DescriptionLabel" runat="server" 
+                                        Text='<%# Eval("Description") %>' />
+                                    <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" 
+                                        ReadOnly="True" ToolbarStartupExpanded="false" Toolbar="Basic"
+                                        ContentsCss="/ckeditor1/contents.css" Height="69px" ToolbarCanCollapse="false"
+                                        TemplatesFiles="/ckeditor1/plugins/templates/templates/default.js" 
+                                        Text='<%# Eval("SkillsText") %>'
+                                        Width="494px"></cke:CKEditorControl>
+                                    <br />
+                                    <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                    <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
+                                        Text="Delete" />
+                                </li>
+                            </ItemTemplate>
+                            <LayoutTemplate>
+                                <ul ID="itemPlaceholderContainer" runat="server" 
+                                    style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                    <li runat="server" id="itemPlaceholder" />
+                                </ul>
+                                <div style="text-align: center;background-color: #FFCC66;font-family: Verdana, Arial, Helvetica, sans-serif;color: #333333;">
+                                    <asp:DataPager ID="DataPager1" runat="server">
+                                        <Fields>
+                                            <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" 
+                                                ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                            <asp:NumericPagerField />
+                                            <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" 
+                                                ShowNextPageButton="False" ShowPreviousPageButton="False" />
+                                        </Fields>
+                                    </asp:DataPager>
+                                </div>
+                            </LayoutTemplate>
+                            <SelectedItemTemplate>
+                                <asp:PlaceHolder runat="server" ID="SelectedItemTemplateDummyPlaceholder"></asp:PlaceHolder>
+                                <li style="background-color: #FFCC66;font-weight: bold;color: #000080;">ID:
+                                    Label:
+                                    <asp:Label ID="DescriptionLabel" runat="server" 
+                                        Text='<%# Eval("Description") %>' />
+                                    <cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" 
+                                        Toolbar="None" ReadOnly="True" ToolbarStartupExpanded="False" 
+                                        ContentsCss="/ckeditor1/contents.css" Height="69px" 
+                                        TemplatesFiles="/ckeditor1/plugins/templates/templates/default.js" 
+                                        Text='<%# Eval("SkillsText") %>'
+                                        Width="494px"></cke:CKEditorControl>
+                                    <br />
+                                    <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                                    <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" 
+                                        Text="Delete" />
+                                </li>
+                            </SelectedItemTemplate>
+                        </asp:ListView>
+                        <p>
+                        
+                            <asp:SqlDataSource ID="SqlDataSourceSkills" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:usertest1Context %>" 
+                                DeleteCommand="DELETE FROM [Skills] WHERE [ID] = @ID" 
+                                InsertCommand="INSERT INTO [Skills] ([SkillsText], [UserID], [Description]) VALUES (@SkillsText, @UserID, @Description)" 
+                                SelectCommand="SELECT * FROM [Skills] WHERE ([UserID] = @UserID)" 
+                                UpdateCommand="UPDATE [Skills] SET [SkillsText] = @SkillsText, [Description] = @Description WHERE [ID] = @ID">
+                                <DeleteParameters>
+                                    <asp:Parameter Name="ID" Type="Int32" />
+                                </DeleteParameters>
+                                <InsertParameters>
+                                    <asp:Parameter Name="SkillsText" Type="String" />
+                                    <asp:Parameter Name="UserID" Type="Int32" />
+                                    <asp:Parameter Name="Description" Type="String" />
+                                </InsertParameters>
+                                <SelectParameters>
+                                    <asp:SessionParameter Name="UserID" SessionField="UserID" Type="Int32" />
+                                </SelectParameters>
+                                <UpdateParameters>
+                                    <asp:Parameter Name="SkillsText" Type="String" />
+                                    <asp:Parameter Name="Description" Type="String" />
+                                    <asp:Parameter Name="ID" Type="Int32" />
+                                </UpdateParameters>
+                            </asp:SqlDataSource>
+                        
+                        </p>
+                    </ContentTemplate>
+                
+                </asp:UpdatePanel>
+                <%--<cke:CKEditorControl ID="ckeditor1" BasePath="/ckeditor1" runat="server" Toolbar="Basic"></cke:CKEditorControl>
                 <asp:Button ID="bUpdateSkills" runat="server" CommandName="Update" Text="Update Skills"
                     Width="131px" OnClick="bUpdateSkills_Click" OnCommand="bUpdateSkills_Command" />
                 <br />
-                <asp:Label ID="lblSkills" runat="server" Text="Label" Visible="False"></asp:Label>
+                <asp:Label ID="lblSkills" runat="server" Text="Label" Visible="False"></asp:Label>--%>
                 <br />
             </asp:WizardStep>
         </WizardSteps>

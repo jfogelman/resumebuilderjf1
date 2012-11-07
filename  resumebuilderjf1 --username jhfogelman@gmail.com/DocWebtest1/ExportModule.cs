@@ -9,11 +9,11 @@ using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-
+using DocWebtest1.Models;
 
 namespace DocWebtest1
 {
-    public class ExportModule
+    public static class ExportModule
     {
         public static void WriteDocInPlace(string filetext, string filename, HttpResponse Response)
         {
@@ -65,7 +65,18 @@ namespace DocWebtest1
             response.Close();
         }
 
-        public static void TestExport()
+        public static string InnerText(this XElement el)
+        {
+            StringBuilder str = new StringBuilder();
+            foreach (XNode element in el.DescendantNodes().Where(x => x.NodeType == XmlNodeType.Text))
+            {
+                str.Append(element.ToString());
+            }
+            return str.ToString();
+        }
+
+
+        public static void TestExport(Resume myres)
         {
             byte[] byteArray = File.ReadAllBytes(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\templates\myresumetest1.docx");
             using (MemoryStream mem = new MemoryStream())
@@ -78,9 +89,39 @@ namespace DocWebtest1
                         "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
                     XDocument doc = wordDoc.MainDocumentPart.GetXDocument();
-                    var text = doc.Descendants(wsp:rsidR="00F95D8A")
-                         .Where(n => n.Value.Contains("Street Address"));
-                         //.Select(n);
+                    //var texto = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}instrText");
+                    var toStreet = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Full Line Address"));
+
+//                    toStreet = doc.Descendants()
+  //                     .Where(n => n.Value.Contains("Full Line Address"));
+
+                    if (toStreet != null)
+                    {
+
+                        XElement xstreet = (XElement)toStreet.First();
+                        xstreet.Value = "new Street";
+                        var db = new usertest1Context();
+                        string sAdd = "";
+                        string sEml = "";
+                        string sPhn = "";
+
+                        if (myres.AddressID != null)
+                        {
+                            int cAddID = Convert.ToInt32(myres.AddressID);
+                            Address add = db.Addresses.SingleOrDefault(c => c.ID == cAddID);
+                            sAdd = add.Street1 + " " + add.City + ", " + add.State + " " + add.Zipcode;
+                        }
+                        if (myres.Email != null)
+                            sEml = myres.Email.EmailText;
+                        if (myres.Phone != null)
+                            sPhn = myres.Phone.PhoneNumber;
+                        
+                        xstreet.Value = sAdd + " • " + sPhn + " • " + sEml;
+                    }
+                    //var text = doc.Descendants("w:instrText")
+                    //     .Where(n => n.Value.Contains("Street Address"));
+                    //     //.Select(n);
                             //.StringConcatenate();
                     //<w:instrText >Street Address</w:instrText>	System.Xml.Linq.XNode {System.Xml.Linq.XElement}
 
@@ -88,7 +129,7 @@ namespace DocWebtest1
                         wordDoc.MainDocumentPart.PutXDocument();
                     
                 }
-                using (FileStream fileStream = new FileStream("Test2.docx",
+                using (FileStream fileStream = new FileStream(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\test2.docx",
                     System.IO.FileMode.CreateNew))
                 {
                     mem.WriteTo(fileStream);
