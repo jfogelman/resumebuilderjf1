@@ -75,8 +75,16 @@ namespace DocWebtest1
             return str.ToString();
         }
 
+        public enum ExportDocType
+        {
+            DOCX , 
+            DOC ,
+            RTF ,
+            HTML ,
+            PDF 
+        }
 
-        public static void TestExport(Resume myres)
+        public static void TestExport(Resume myres, ExportDocType docType)
         {
             byte[] byteArray = File.ReadAllBytes(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\templates\myresumetest1.docx");
             using (MemoryStream mem = new MemoryStream())
@@ -90,6 +98,36 @@ namespace DocWebtest1
 
                     XDocument doc = wordDoc.MainDocumentPart.GetXDocument();
                     //var texto = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}instrText");
+
+                    var findemppar = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr");
+
+                    var findemppar1 = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr")
+                        .Where(i => i.Attribute("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR").Value.Equals("00B67166"));
+
+                    var pararr = findemppar1.ToArray();
+
+                    XElement par1 = pararr.ElementAt(0);
+                    XElement par2 = pararr.ElementAt(1);
+
+                    XElement np1 = new XElement(par1);
+                    XElement np2 = new XElement(par2);
+
+                    par2.AddAfterSelf(np1);
+                    np1.AddAfterSelf(np2);
+
+                    //XElement tro = findemppar1.First();
+                    //XElement troPar = tro.Parent;
+                    //XElement tro2 = new XElement(tro);
+                    //tro.AddAfterSelf(tro2);
+                    //XElement tro3 = new XElement(tro2);
+                    //tro.AddAfterSelf(tro3);
+                    //TableRow tr1 = new TableRow();
+                    //tr1.RsidTableRowAddition.Value;
+                    //tr1.Clone();
+                    //Table t;
+                    //t.a
+//                        .Where(n => n
+
                     var toStreet = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                         .Where(n => n.Value.Contains("Full Line Address"));
 
