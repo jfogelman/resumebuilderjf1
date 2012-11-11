@@ -24,9 +24,14 @@ namespace DocWebtest1
         {
      //       ExportModule.WriteDocInPlace(TextBox1.Text, "test1.docx", Response);
             var db = new usertest1Context();
+            int iResumeID;
+            iResumeID = Convert.ToInt32(ListBoxResumes.SelectedValue);
+//            iResumeID = this.l
+            ExportModule.ExportDocType dType = (ExportModule.ExportDocType) 
+                Enum.Parse(typeof(ExportModule.ExportDocType), ListBoxOutputFormat.SelectedValue);
 
-            Resume res = db.Resumes.SingleOrDefault(c => c.ID == 10);
-            ExportModule.TestExport(res);
+            Resume res = db.Resumes.SingleOrDefault(c => c.ID == iResumeID);
+            ExportModule.TestExport(res, dType);
         }
     }
 }
