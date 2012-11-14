@@ -30,8 +30,13 @@ namespace DocWebtest1
             ExportModule.ExportDocType dType = (ExportModule.ExportDocType) 
                 Enum.Parse(typeof(ExportModule.ExportDocType), ListBoxOutputFormat.SelectedValue);
 
+            int iResTempID = -1;
+            iResTempID = Convert.ToInt32(ListBoxResumeTemplates.SelectedValue);
+
+            ResumeTemplate restemp = db.ResumeTemplates.SingleOrDefault(c => c.ID == iResTempID); ;
+
             Resume res = db.Resumes.SingleOrDefault(c => c.ID == iResumeID);
-            ExportModule.TestExport(res, dType);
+            ExportModule.TestExport(res, dType, restemp);
         }
     }
 }

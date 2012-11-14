@@ -84,9 +84,10 @@ namespace DocWebtest1
             PDF 
         }
 
-        public static void TestExport(Resume myres, ExportDocType docType)
+        public static void TestExport(Resume myres, ExportDocType docType, ResumeTemplate resTemplate)
         {
-            byte[] byteArray = File.ReadAllBytes(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\templates\myresumetest1.docx");
+
+            byte[] byteArray = File.ReadAllBytes(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\templates\" + resTemplate.TemplateDocName);
             using (MemoryStream mem = new MemoryStream())
             {
                 mem.Write(byteArray, 0, (int)byteArray.Length);
@@ -100,20 +101,167 @@ namespace DocWebtest1
                     //var texto = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}instrText");
 
                     var findemppar = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr");
+                    var findTRAll = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr")
+                        .Where(i => i.Attribute("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR").Value.Equals("009006B5"));
+                    var findTR = findTRAll.ElementAt(5);
+                    var findTR2 = findTRAll.ElementAt(6);
+
+                    var findTDEdu1 = findTRAll.ElementAt(9);
+                    var findTDEdu2 = findTRAll.ElementAt(10);
 
                     var findemppar1 = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr")
-                        .Where(i => i.Attribute("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR").Value.Equals("00B67166"));
+                        .Where(i => i.Attribute("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr").Value.Equals("00D62111"));
 
-                    var pararr = findemppar1.ToArray();
+                    //var pararr = findemppar1.ToArray();
 
-                    XElement par1 = pararr.ElementAt(0);
-                    XElement par2 = pararr.ElementAt(1);
+                    if (myres.ResumeEducations != null && myres.ResumeEducations.Count > 0)
+                    {
+                        XElement par1 = findTDEdu1;// ararr.ElementAt(0);
+                        XElement par2 = findTDEdu2;// pararr.ElementAt(1);
+                        XElement par1Copy = new XElement(par1);
+                        XElement par2Copy = new XElement(par2);
+                        XElement findDates = findTDEdu1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Dates of attendance")).First(); // Dates of 
+                        //XElement findSchoolName = findTDEdu1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        //.Where(n => n.Value.Contains("School Name")).First();// Name
+                        //XElement findSchoolLoc = findTDEdu1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        //.Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+                        XElement findSchoolDegree = findTDEdu2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Degree Obtained")).First(); // 
 
-                    XElement np1 = new XElement(par1);
-                    XElement np2 = new XElement(par2);
+                        ResumeEducation resedu = myres.ResumeEducations.ElementAt(0);
 
-                    par2.AddAfterSelf(np1);
-                    np1.AddAfterSelf(np2);
+                        string sName = "";
+                        string sDates = "";
+                        string sLoc = "";
+                        string sDegree = "";
+
+                        if (resedu.Education != null)
+                        {
+                            Education edu = resedu.Education;
+                            sName = edu.SchoolName;
+                            string sSD = edu.StartDate == null ? "" : String.Format("{0:MM/yyyy}", edu.StartDate);
+                            string sED = edu.EndDate == null ? "" : String.Format("{0:MM/yyyy}", edu.EndDate);
+                            sDates = sSD + " - " + sED;
+                            sLoc = edu.SchoolCity + ", " + edu.SchoolState + " " + edu.SchoolCountry;
+                            sDegree = edu.DegreeTitle + " " + edu.DegreeName;
+                        }
+                        findDates.Value = sDates + "\t" + sName + "\t" + sLoc;
+//                        findSchoolName.Value = sName;
+  //                      findSchoolLoc.Value = sLoc;
+                        findSchoolDegree.Value = sDegree;
+
+                        for (int i = 0; i < myres.ResumeEducations.Count - 1; i++)
+                        {
+                            XElement np1 = new XElement(par1Copy);
+                            XElement np2 = new XElement(par2Copy);
+                            XElement findDatesx = np1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Dates of attendance")).First(); // Dates of 
+                            //XElement findSchoolNamex = findTDEdu1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                            //.Where(n => n.Value.Contains("School Name")).First();// Name
+                            //XElement findSchoolLocx = findTDEdu1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                            //.Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+                            XElement findSchoolDegreex = np2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                            .Where(n => n.Value.Contains("Degree Obtained")).First(); // 
+
+                            ResumeEducation resedux = myres.ResumeEducations.ElementAt(i + 1);
+
+                            if (resedux.Education != null)
+                            {
+                                Education edu = resedux.Education;
+                                sName = edu.SchoolName;
+                                string sSD = edu.StartDate == null ? "" : String.Format("{0:MM/yyyy}", edu.StartDate);
+                                string sED = edu.EndDate == null ? "" : String.Format("{0:MM/yyyy}", edu.EndDate);
+                                sDates = sSD + " - " + sED;
+                                sLoc = edu.SchoolCity + ", " + edu.SchoolState + " " + edu.SchoolCountry;
+                                sDegree = edu.DegreeTitle + " " + edu.DegreeName;
+                            }
+                            findDatesx.Value = sDates + "\t" + sName + "\t" + sLoc;
+                            //                        findSchoolName.Value = sName;
+                            //                      findSchoolLoc.Value = sLoc;
+                            findSchoolDegreex.Value = sDegree;
+
+                            par2.AddAfterSelf(np1);
+                            np1.AddAfterSelf(np2);
+                        }
+                    }
+                    else
+                    {
+                        XElement par1 = findTDEdu1;// pararr.ElementAt(0);
+                        par1.Remove();
+                        XElement par2 = findTDEdu2;
+                        par2.Remove();
+                    }
+
+                    if (myres.ResumeExperiences != null && myres.ResumeExperiences.Count > 0)
+                    {
+                        XElement par1 = findTR;// ararr.ElementAt(0);
+                        XElement par2 = findTR2;// pararr.ElementAt(1);
+                        XElement par1Copy = new XElement(par1);
+                        XElement par2Copy = new XElement(par2);
+                        XElement findDates = findTR.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Dates of Employment")).First(); // Dates of Employment
+                        XElement findCompanyName = findTR.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Company Name")).First();// Company Name
+                        XElement findCompanyLoc = findTR.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+                        ResumeExperience resexp = myres.ResumeExperiences.ElementAt(0);
+
+                        string sComp = "";
+                        string sDates = "";
+                        string sLoc = "";
+
+                        if (resexp.Experience != null)
+                        {
+                            Experience exp = resexp.Experience;
+                            sComp = exp.CompanyName;
+                            string sSD = exp.StartDate == null ? "" : String.Format("{0:MM/yyyy}", exp.StartDate);
+                            string sED = exp.EndDate == null ? "" : String.Format("{0:MM/yyyy}", exp.EndDate);
+                            sDates = sSD  + " - " + sED;
+                            sLoc = exp.CompanyCity + ", " + exp.CompanyState;
+                        }
+                        findDates.Value = sDates;
+                        findCompanyName.Value = sComp;
+                        findCompanyLoc.Value = sLoc;
+
+                        for (int i = 0; i < myres.ResumeExperiences.Count - 1; i++)
+                        {
+                            XElement np1 = new XElement(par1Copy);
+                            XElement np2 = new XElement(par2Copy);
+                            XElement findDatesx = np1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Dates of Employment")).First(); // Dates of Employment
+                            XElement findCompanyNamex = np1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                            .Where(n => n.Value.Contains("Company Name")).First();// Company Name
+                            XElement findCompanyLocx = np1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                            .Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+
+                            ResumeExperience resexpx = myres.ResumeExperiences.ElementAt(i+1);
+
+                            if (resexpx.Experience != null)
+                            {
+                                Experience exp = resexpx.Experience;
+                                sComp = exp.CompanyName;
+                                string sSD = exp.StartDate == null ? "" : String.Format("{0:MM/yyyy}", exp.StartDate);
+                                string sED = exp.EndDate == null ? "" : String.Format("{0:MM/yyyy}", exp.EndDate);
+                                sDates = sSD + " - " + sED;
+                                sLoc = exp.CompanyCity + ", " + exp.CompanyState;
+                            }
+                            findDatesx.Value = sDates;
+                            findCompanyNamex.Value = sComp;
+                            findCompanyLocx.Value = sLoc;
+
+                            par2.AddAfterSelf(np1);
+                            np1.AddAfterSelf(np2);
+                        }
+                    }
+                    else
+                    {
+                        XElement par1 = findTR;// pararr.ElementAt(0);
+                        par1.Remove();
+                        XElement par2 = findTR2;
+                        par2.Remove();
+                    }
+
 
                     //XElement tro = findemppar1.First();
                     //XElement troPar = tro.Parent;
@@ -134,7 +282,7 @@ namespace DocWebtest1
 //                    toStreet = doc.Descendants()
   //                     .Where(n => n.Value.Contains("Full Line Address"));
 
-                    if (toStreet != null)
+                    if (toStreet != null && toStreet.Count<XElement>() > 0)
                     {
 
                         XElement xstreet = (XElement)toStreet.First();
@@ -154,9 +302,47 @@ namespace DocWebtest1
                             sEml = myres.Email.EmailText;
                         if (myres.Phone != null)
                             sPhn = myres.Phone.PhoneNumber;
+                        sPhn = sPhn == null || sPhn.Length == 0 ? "" : String.Format("{0:(###) ###-####}", Convert.ToInt64(sPhn));
                         
                         xstreet.Value = sAdd + " • " + sPhn + " • " + sEml;
                     }
+
+                    var toName = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Your Name"));
+
+                    if (toName != null && toName.Count<XElement>() > 0)
+                    {
+
+                        XElement xname = (XElement)toName.First();
+                        xname.Value = "new name";
+                        var db = new usertest1Context();
+                        string sNme = "";
+
+                        if (myres.Usertable != null && myres.Usertable.DisplayName != null)
+                        {
+                            sNme = myres.Usertable.DisplayName;
+                        }
+                        xname.Value = sNme;
+                    }
+
+                    var toObj = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Your Objective"));
+
+                    if (toObj != null && toObj.Count<XElement>() > 0)
+                    {
+
+                        XElement xObj = (XElement)toObj.First();
+                        xObj.Value = "new objective";
+                        var db = new usertest1Context();
+                        string sObj = "";
+
+                        if (myres.Objective != null && myres.Objective.ObjectiveText != null)
+                        {
+                            sObj = myres.Objective.ObjectiveText;
+                        }
+                        xObj.Value = sObj;
+                    }
+
                     //var text = doc.Descendants("w:instrText")
                     //     .Where(n => n.Value.Contains("Street Address"));
                     //     //.Select(n);

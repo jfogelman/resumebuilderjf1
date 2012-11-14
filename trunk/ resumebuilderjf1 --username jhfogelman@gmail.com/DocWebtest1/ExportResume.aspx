@@ -22,7 +22,7 @@
     <h2>
         SELECT TEMPLATE FOR RESUME</h2>
     <p>
-        <asp:ListBox ID="ListBox2" runat="server" 
+        <asp:ListBox ID="ListBoxResumeTemplates" runat="server" 
             DataSourceID="SqlDataSourceResumeTemplates" DataTextField="TemplateName" 
             DataValueField="ID" Width="318px"></asp:ListBox>
         <asp:SqlDataSource ID="SqlDataSourceResumeTemplates" runat="server" 
