@@ -106,8 +106,8 @@ namespace DocWebtest1
                     var findTR = findTRAll.ElementAt(5);
                     var findTR2 = findTRAll.ElementAt(6);
 
-                    var findTDEdu1 = findTRAll.ElementAt(9);
-                    var findTDEdu2 = findTRAll.ElementAt(10);
+                    var findTDEdu1 = findTRAll.ElementAt(8);
+                    var findTDEdu2 = findTRAll.ElementAt(9);
 
                     var findemppar1 = doc.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tr")
                         .Where(i => i.Attribute("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr").Value.Equals("00D62111"));
@@ -205,11 +205,18 @@ namespace DocWebtest1
                         .Where(n => n.Value.Contains("Company Name")).First();// Company Name
                         XElement findCompanyLoc = findTR.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                         .Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+                        XElement findJobTitle = findTR2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Job Title")).First(); // Job Title
+
+                        XElement findJobResp = findTR2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
+                        .Where(n => n.Value.Contains("Job Responsibility")).First(); // Job Responsibility
+
                         ResumeExperience resexp = myres.ResumeExperiences.ElementAt(0);
 
                         string sComp = "";
                         string sDates = "";
                         string sLoc = "";
+                        string sJobTitle = "";
 
                         if (resexp.Experience != null)
                         {
@@ -219,10 +226,34 @@ namespace DocWebtest1
                             string sED = exp.EndDate == null ? "" : String.Format("{0:MM/yyyy}", exp.EndDate);
                             sDates = sSD  + " - " + sED;
                             sLoc = exp.CompanyCity + ", " + exp.CompanyState;
+                            sJobTitle = exp.JobTitle;
+
+                            XElement respCopy = new XElement(findJobResp);
+                            
+                            var achs = exp.Achievements;
+                            if (achs != null & achs.Count > 0)
+                            {
+                                foreach (Achievement ach in achs)
+                                {
+                                    if (ach != null)
+                                    {
+                                        XElement na1 = new XElement(respCopy);
+                                        na1.Value = ach.Description != null ? ach.Description : "";
+                                        findJobResp.Add(na1);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                findJobResp.Remove();
+                            }
+
+
                         }
                         findDates.Value = sDates;
                         findCompanyName.Value = sComp;
                         findCompanyLoc.Value = sLoc;
+                        findJobTitle.Value = sJobTitle;
 
                         for (int i = 0; i < myres.ResumeExperiences.Count - 1; i++)
                         {
@@ -234,6 +265,11 @@ namespace DocWebtest1
                             .Where(n => n.Value.Contains("Company Name")).First();// Company Name
                             XElement findCompanyLocx = np1.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
                             .Where(n => n.Value.Contains("City, ST")).First(); // City, ST
+                            XElement findJobTitlex = np2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                        .Where(n => n.Value.Contains("Job Title")).First(); // Job Title
+                            XElement findJobRespx = np2.Descendants(@"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
+                        .Where(n => n.Value.Contains("Job Responsibility")).First(); // Job Responsibility
+
 
                             ResumeExperience resexpx = myres.ResumeExperiences.ElementAt(i+1);
 
@@ -245,10 +281,32 @@ namespace DocWebtest1
                                 string sED = exp.EndDate == null ? "" : String.Format("{0:MM/yyyy}", exp.EndDate);
                                 sDates = sSD + " - " + sED;
                                 sLoc = exp.CompanyCity + ", " + exp.CompanyState;
+                                sJobTitle = exp.JobTitle;
+
+                                XElement respCopy = new XElement(findJobRespx);
+
+                                var achs = exp.Achievements;
+                                if (achs != null & achs.Count > 0)
+                                {
+                                    foreach (Achievement ach in achs)
+                                    {
+                                        if (ach != null)
+                                        {
+                                            XElement na1 = new XElement(respCopy);
+                                            na1.Value = ach.Description != null ? ach.Description : "";
+                                            findJobRespx.Add(na1);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    findJobRespx.Remove();
+                                }
                             }
                             findDatesx.Value = sDates;
                             findCompanyNamex.Value = sComp;
                             findCompanyLocx.Value = sLoc;
+                            findJobTitlex.Value = sJobTitle;
 
                             par2.AddAfterSelf(np1);
                             np1.AddAfterSelf(np2);
