@@ -65,6 +65,21 @@ namespace DocWebtest1
             response.Close();
         }
 
+        public static void WriteFileStreamInPlace(Stream filestream, string filename, HttpResponse response)
+        {
+            response.AddHeader("Connection", "close");
+            response.AddHeader("Cache-Control", "private");
+            response.ContentType = "application/octect-stream";
+
+            //Give the browser a hint at the name of the file.
+            response.AddHeader("content-disposition", string.Format("attachment; filename={0}", filename));
+
+            response.Output.Write(filestream);
+
+            response.Flush();
+            response.Close();
+        }
+
         public static string InnerText(this XElement el)
         {
             StringBuilder str = new StringBuilder();
@@ -84,7 +99,7 @@ namespace DocWebtest1
             PDF 
         }
 
-        public static void TestExport(Resume myres, ExportDocType docType, ResumeTemplate resTemplate)
+        public static void TestExport(Resume myres, ExportDocType docType, ResumeTemplate resTemplate, HttpResponse Response)
         {
 
             byte[] byteArray = File.ReadAllBytes(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\templates\" + resTemplate.TemplateDocName);
@@ -411,7 +426,8 @@ namespace DocWebtest1
                         wordDoc.MainDocumentPart.PutXDocument();
                     
                 }
-                using (FileStream fileStream = new FileStream(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\test2.docx",
+                //WriteFileStreamInPlace(mem, myres.Description + "_Export.docx", Response);
+                using (FileStream fileStream = new FileStream(@"C:\Users\jfogelman\Documents\Visual Studio 2010\Projects\DocWebtest1\DocWebtest1\" + myres.Description + "_Export.docx",
                     System.IO.FileMode.CreateNew))
                 {
                     mem.WriteTo(fileStream);

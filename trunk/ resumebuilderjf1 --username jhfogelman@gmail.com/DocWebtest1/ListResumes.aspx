@@ -16,7 +16,8 @@
                     DataSourceID="SqlDataSourceResumes" 
                     onselectedindexchanged="GridView1_SelectedIndexChanged" 
                     style="margin-right: 168px" Width="356px" 
-                    onrowcreated="GridView1_RowCreated" onrowdatabound="GridView1_RowDataBound">
+                    onrowcreated="GridView1_RowCreated" 
+                    onrowdatabound="GridView1_RowDataBound" onrowdeleting="GridView1_RowDeleting">
                     <Columns>
                         <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" />
                         <asp:BoundField DataField="Description" HeaderText="Resume Name" 
@@ -35,7 +36,7 @@
                     InsertCommand="INSERT INTO [Resumes] ([ObjectiveID], [UserID], [PhoneID], [EmailID], [AddressID], [SkillsID], [Description]) VALUES (@ObjectiveID, @UserID, @PhoneID, @EmailID, @AddressID, @SkillsID, @Description)" 
                     SelectCommand="SELECT * FROM [Resumes] WHERE ([UserID] = @UserID)" 
                     
-                    UpdateCommand="UPDATE [Resumes] SET [ObjectiveID] = @ObjectiveID, [UserID] = @UserID, [PhoneID] = @PhoneID, [EmailID] = @EmailID, [AddressID] = @AddressID, [SkillsID] = @SkillsID, [Description] = @Description WHERE [ID] = @ID">
+                    UpdateCommand="UPDATE [Resumes] SET [Description] = @Description WHERE [ID] = @ID">
                     <DeleteParameters>
                         <asp:Parameter Name="ID" Type="Int32" />
                     </DeleteParameters>
@@ -52,14 +53,7 @@
                         <asp:SessionParameter Name="UserID" SessionField="UserID" Type="Int32" />
                     </SelectParameters>
                     <UpdateParameters>
-                        <asp:Parameter Name="ObjectiveID" Type="Int32" />
-                        <asp:Parameter Name="UserID" Type="Int32" />
-                        <asp:Parameter Name="PhoneID" Type="Int32" />
-                        <asp:Parameter Name="EmailID" Type="Int32" />
-                        <asp:Parameter Name="AddressID" Type="Int32" />
-                        <asp:Parameter Name="SkillsID" Type="Int32" />
                         <asp:Parameter Name="Description" Type="String" />
-                        <asp:Parameter Name="ID" Type="Int32" />
                     </UpdateParameters>
                 </asp:SqlDataSource>
             </p>
