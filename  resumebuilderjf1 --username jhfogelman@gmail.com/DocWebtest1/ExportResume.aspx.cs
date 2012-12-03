@@ -36,7 +36,7 @@ namespace DocWebtest1
             ResumeTemplate restemp = db.ResumeTemplates.SingleOrDefault(c => c.ID == iResTempID); ;
 
             Resume res = db.Resumes.SingleOrDefault(c => c.ID == iResumeID);
-            ExportModule.TestExport(res, dType, restemp);
+            ExportModule.TestExport(res, dType, restemp, Response);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocWebtest1.Models;
 
 namespace DocWebtest1
 {
@@ -56,6 +57,27 @@ namespace DocWebtest1
                     }
                 }
                 
+            }
+        }
+
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            var db = new usertest1Context();
+            int iResumeID = Convert.ToInt32(e.Keys[0]);
+            Resume res = db.Resumes.SingleOrDefault(c => c.ID == iResumeID);
+            if (res != null)
+            {
+                var re = (from c in db.ResumeExperiences
+                          where c.ResumeID == iResumeID
+                          select c);
+                foreach (ResumeExperience r in re)
+                    db.ResumeExperiences.Remove(r);
+                var rd = (from c in db.ResumeEducations
+                          where c.ResumeID == iResumeID
+                          select c);
+                foreach (ResumeEducation r in rd)
+                    db.ResumeEducations.Remove(r);
+                db.SaveChanges();
             }
         }
     }
